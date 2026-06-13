@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSphere - Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" style="text-decoration:none; color:inherit;">
+                <span class="logo-text">Edu<span class="highlight">Sphere</span></span>
+            </a>
+        </div>
+    </nav>   
+    
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                Edu<span class="highlight">Sphere</span>
+            </div>
+            <h2>Create Account</h2>
+            <p class="auth-sub">Select your role to proceed</p>
+
+            <div class="role-tabs">
+                <button class="role-tab active" onclick="setRole('student', this)">Student</button>
+                <button class="role-tab" onclick="setRole('teacher', this)">Teacher</button>
+                <button class="role-tab" onclick="setRole('institution', this)">Institution</button>
+            </div>
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="Enter your full name">
+            </div>
+
+            <div class="input-group">
+                <label>Institutional Email</label>
+                <input type="email" placeholder="yourname@xyz.ac.in">              
+            </div>
+
+            <div class="input-group" id="id-field">
+                <label id="id-label">Roll Number</label>
+                <input type="text" id="id-input" placeholder="Enter your roll number">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password">
+            </div>
+
+            <button class="btn-primary btn-full" onclick="register()">Create Account</button>
+            <p class="auth-switch">
+                Already have an account? <a href="login.html">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="register.js"></script>
+</body>
+</html>

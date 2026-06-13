@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSphere - Login</title>
+    <link rel="stylesheet" href="style.css">      
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: inherit;">
+                <span class="logo-text">Edu<span class="highlight">Sphere</span></span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                Edu<span class="highlight">Sphere</span>
+            </div>
+            <h2>Welcome back</h2>
+            <p class="auth-sub">Sign in with your institutional credentials</p>
+            <div class="input-group">
+                <label>Institutional Email</label>
+                <input type="email" placeholder="yourname@xyz.ac.in">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter your password">
+            </div>
+            <button class="btn-primary btn-full" onclick="login()">Sign In</button>
+            <p class="auth-switch">
+                Don't have an account? <a href="register.html">Sign up</a>
+            </p>
+        </div>
+    </div>
+<script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exam-dashboard</title>
+     <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>exams</h2>
+                <p>no recent activity yet.</p>
+            </div>
+            <div class="dash-card">
+             <div class="empty-state">
+                <p>no recent activity</p>
+                </div>
+             </div>
+             </main>
+
+
+             <div class="ai-float" onclick="toggleChat()">
+            <button class="ai-float-btn">
+                E<span class="ai-highlight">S</span>
+            </button>
+            <span class="ai-float-label">AI Assistant</span>
+        </div>
+
+    </div>
+
+    <div class="ai-chat-popup" id="aiChat">
+        <div class="chat-header">
+            <div class="chat-title">
+                <span>Edu<span class="highlight">Sphere</span> AI</span>
+            </div>
+            <button class="chat-close" onclick="toggleChat()">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg ai-msg">
+                <p>Hi! I'm EduSphere AI. I'll be fully functional soon. How can I help you today?</p>
+            </div>
+        </div>
+        <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Ask anything..." />
+            <button class="chat-send" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+<script src="sidebar.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
