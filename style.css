@@ -694,4 +694,212 @@ body {
 .empty-post {
     color: #444;
     font-size: 13px;
+}.feed-search {
+    margin-bottom: 20px;
+}
+
+.feed-search input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #0d0d1a;
+    border: 1px solid #ffffff15;
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.feed-search input:focus {
+    border-color: #4d9fff;
+}
+
+.create-post {
+    display: flex;
+    gap: 12px;
+    background: #0d0d1a;
+    border: 1px solid #ffffff15;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.post-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #4d9fff30;
+    border: 1px solid #4d9fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.post-input-wrap {
+    flex: 1;
+}
+
+.post-input-wrap textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #ffffff15;
+    color: white;
+    font-size: 14px;
+    padding: 8px 0;
+    outline: none;
+    resize: none;
+    height: 60px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.post-input-wrap textarea::placeholder {
+    color: #444;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.post-img-btn {
+    background: transparent;
+    border: 1px solid #ffffff20;
+    color: #aaaaaa;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.post-img-btn:hover {
+    border-color: #4d9fff;
+    color: #4d9fff;
+}
+
+.post-btn {
+    padding: 6px 20px !important;
+    font-size: 13px !important;
+}
+
+.feed-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.footer {
+    padding: 60px 40px 24px;
+    border-top: 1px solid #ffffff10;
+    margin-top: 40px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-brand {
+    max-width: 280px;
+}
+
+.footer-brand p {
+    font-size: 13px;
+    color: #aaaaaa;
+    margin-top: 12px;
+    line-height: 1.7;
+}
+
+.footer-links {
+    display: flex;
+    gap: 60px;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-col h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.footer-col a {
+    font-size: 13px;
+    color: #aaaaaa;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-col a:hover {
+    color: #4d9fff;
+}
+
+.footer-bottom {
+    border-top: 1px solid #ffffff10;
+    padding-top: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: #444;
+}
+.roles {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.roles h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.role-card {
+    background: #ffffff08;
+    border: 1px solid #ffffff15;
+    border-radius: 12px;
+    padding: 32px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.role-card:hover {
+    border-color: #4d9fff;
+    box-shadow: 0 0 24px #4d9fff20;
+    transform: translateY(-4px);
+}
+
+.role-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+}
+
+.role-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.role-card p {
+    font-size: 13px;
+    color: #aaaaaa;
+    line-height: 1.6;
 }

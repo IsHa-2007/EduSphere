@@ -3,27 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduShere-admin Dashboard</title>
-     <link rel="stylesheet" href="style.css">
+    <title>EduSphere - Institution Dashboard</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="dashboard">
-            <aside class="sidebar" id="sidebar"></aside>
+        <aside class="sidebar" id="sidebar"></aside>
+
         <main class="main-content">
-    <div class="dashboard-header">
-        <h1>Welcome back, <span id="username">User</span>!</h1>
-        <p>Here's your personalized dashboard.</p>
-    </div>
-             </main>
+            <div class="dashboard-header">
+                <h1>Welcome, <span id="username">Admin</span>!</h1>
+                <p>Here's your institution overview.</p>
+            </div>
 
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p class="stat-label">Total Colleges</p>
+                    <h3 class="stat-value">---</h3>
+                    <p class="stat-sub">Registered</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Total Students</p>
+                    <h3 class="stat-value">---</h3>
+                    <p class="stat-sub">Enrolled</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Total Teachers</p>
+                    <h3 class="stat-value">---</h3>
+                    <p class="stat-sub">Registered</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Pending Approvals</p>
+                    <h3 class="stat-value">---</h3>
+                    <p class="stat-sub">Awaiting review</p>
+                </div>
+            </div>
 
-             <div class="ai-float" onclick="toggleChat()">
+            <div class="dash-grid" style="margin-top: 24px;">
+                <div class="dash-card">
+                    <h3>Recent Registrations</h3>
+                    <div class="empty-state">
+                        <p>No recent registrations.</p>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <h3>Announcements</h3>
+                    <div class="empty-state">
+                        <p>No announcements yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dash-grid" style="margin-top: 24px;">
+                <div class="dash-card">
+                    <h3>Colleges</h3>
+                    <div class="empty-state">
+                        <p>No colleges registered yet.</p>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <h3>Departments</h3>
+                    <div class="empty-state">
+                        <p>No departments added yet.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <div class="ai-float" onclick="toggleChat()">
             <button class="ai-float-btn">
                 E<span class="ai-highlight">S</span>
             </button>
             <span class="ai-float-label">AI Assistant</span>
         </div>
-
     </div>
 
     <div class="ai-chat-popup" id="aiChat">
@@ -44,7 +97,7 @@
         </div>
     </div>
 
-  <script src="sidebar.js"></script>
-  <script src="dashboard.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

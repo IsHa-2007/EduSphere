@@ -3,29 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduSphere-teacher Dashboard</title>
+    <title>EduSphere - Institution Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
-            <main class="main-content">
-              <div class="page-header">
-    <h2>Upload Notes</h2>
-    <p>Share study materials with students</p>
+
+        <main class="main-content">
+           <div class="page-header">
+    <h2>Departments</h2>
+    <p>Manage university departments</p>
 </div>
-<div class="dash-card">
-    <div class="empty-state">
-        <p>No notes uploaded yet.</p>
+
+<div class="dash-grid">
+    <div class="dash-card">
+        <h3>All Departments</h3>
+        <div class="empty-state">
+            <p>No departments added yet.</p>
+        </div>
+    </div>
+    <div class="dash-card">
+        <h3>Add Department</h3>
+        <div class="empty-state">
+            <p>Feature coming soon.</p>
+        </div>
     </div>
 </div>
-            </main>
-            <div class="ai-float" onclick="toggleChat()">
+        </main>
+
+        <div class="ai-float" onclick="toggleChat()">
             <button class="ai-float-btn">
                 E<span class="ai-highlight">S</span>
             </button>
             <span class="ai-float-label">AI Assistant</span>
         </div>
+    </div>
+
     <div class="ai-chat-popup" id="aiChat">
         <div class="chat-header">
             <div class="chat-title">
@@ -43,7 +57,7 @@
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
-            </div>
+
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
 </body>
