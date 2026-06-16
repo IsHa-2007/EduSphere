@@ -15,7 +15,7 @@ function login() {
         } else if (role.toLowerCase() === 'teacher') {
             window.location.href = 'teacher-dashboard.html';
         } else if (role.toLocaleLowerCase() === 'institution'){
-            window.location.href ='institution-dashboard.html';
+            window.location.href ='admin-dashboard.html';
         } else {
             alert('Invalid role.');
         }

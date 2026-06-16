@@ -24,7 +24,7 @@ const teacherLinks = `
 `;
 
 const institutionLinks = `
-    <a href="institution-dashboard.htm" class="nav-item">Home</a>
+    <a href="admin-dashboard.html" class="nav-item">Home</a>
     <a href="admin-colleges.html" class="nav-item">Colleges</a>
     <a href="admin-users.html" class="nav-item">Users</a>
     <a href="admin-departments.html" class="nav-item">Departments</a>
