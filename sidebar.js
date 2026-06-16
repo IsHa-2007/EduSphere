@@ -25,7 +25,6 @@ const teacherLinks = `
 
 const institutionLinks = `
     <a href="admin-dashboard.html" class="nav-item">Home</a>
-    <a href="admin-colleges.html" class="nav-item">Colleges</a>
     <a href="admin-users.html" class="nav-item">Users</a>
     <a href="admin-departments.html" class="nav-item">Departments</a>
 `;
@@ -37,7 +36,7 @@ const commonLinks = `
 let navLinks = '';
 if (role === 'student') navLinks = studentLinks;
 else if (role === 'teacher') navLinks = teacherLinks;
-else if (role === 'admin') navLinks = adminLinks;
+else if (role === 'institution') navLinks = institutionLinks;
 
 document.getElementById('sidebar').innerHTML = `
     <div class="sidebar-logo">
