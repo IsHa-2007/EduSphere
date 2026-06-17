@@ -66,7 +66,7 @@ body {
 .btn-primary {
     color: white;
     border: 1px solid #0095ff;
-    padding: 8px 20px;
+    padding: 10px 24px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -83,14 +83,13 @@ body {
 .btn-outline {
     color: white;
     border: 1px solid rgba(0, 149, 255, 0.4);
-    padding: 6px 16px;
-    border-radius: 8px;
+    padding: 10px 24px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     background: rgba(0, 149, 255, 0.1);
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
-    margin-top: 12px;
 }
 
 .btn-outline:hover {
@@ -98,8 +97,6 @@ body {
     color: #0095ff;
     box-shadow: 0 0 12px #0095ff40;
 }
-
-
 .hero {
     display: flex;
     justify-content: center;
@@ -144,7 +141,9 @@ body {
     gap: 16px;
     justify-content: center;
 }
-
+.hero-buttons button {
+    min-width: 140px;
+}
 
 .features {
     padding: 80px 40px;
