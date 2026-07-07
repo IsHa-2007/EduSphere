@@ -14,9 +14,32 @@
     <h2>Upload Notes</h2>
     <p>Share study materials with students</p>
 </div>
+<div class="page-header">
+    <h2>Upload Notes</h2>
+    <p>Share study materials with your students</p>
+</div>
+
+<div class="dash-card" style="margin-bottom: 24px;">
+    <h3>Add New Note</h3>
+    <div class="input-group">
+        <label>Title</label>
+        <input type="text" id="note-title" placeholder="e.g. Unit 2 - Data Structures">
+    </div>
+    <div class="input-group">
+        <label>Subject</label>
+        <input type="text" id="note-subject" placeholder="e.g. DSA">
+    </div>
+    <div class="input-group">
+        <label>Content / Description</label>
+        <textarea id="note-content" placeholder="Write note content here..." style="width:100%; padding:10px 14px; background:rgba(255,255,255,0.05); border:1px solid rgba(0,149,255,0.2); border-radius:8px; color:white; font-size:14px; outline:none; resize:none; height:100px; font-family:'Segoe UI',sans-serif;"></textarea>
+    </div>
+    <button class="btn-primary" onclick="uploadNote()">Upload Note</button>
+</div>
+
 <div class="dash-card">
-    <div class="empty-state">
-        <p>No notes uploaded yet.</p>
+    <h3>Uploaded Notes</h3>
+    <div id="notesList">
+        <div class="empty-state"><p>No notes uploaded yet.</p></div>
     </div>
 </div>
             </main>
@@ -45,6 +68,7 @@
     </div>
             </div>
     <script src="sidebar.js"></script>
-    <script src="dashboard.js"></script>
+<script src="dashboard.js"></script>
+<script src="teacher-notes.js"></script>
 </body>
 </html>

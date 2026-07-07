@@ -18,23 +18,21 @@
             </div>
 
             <!-- CREATE POST -->
-            <div class="create-post">
-                <div class="post-avatar">👤</div>
-                <div class="post-input-wrap">
-                    <textarea placeholder="Share something with your network..."></textarea>
-                    <div class="post-actions">
-                        <button class="post-img-btn">📷 Photo</button>
-                        <button class="btn-primary post-btn">Post</button>
-                    </div>
-                </div>
-            </div>
+<div class="create-post">
+    <div class="post-avatar" id="feedAvatar">👤</div>
+    <div class="post-input-wrap">
+        <textarea id="postText" placeholder="Share something with your network..."></textarea>
+        <div class="post-actions">
+            <button class="post-img-btn" onclick="document.getElementById('postImageInput').click()">📷 Photo</button>
+            <input type="file" id="postImageInput" accept="image/*" style="display:none">
+            <button class="btn-primary post-btn" onclick="createPost()">Post</button>
+        </div>
+    </div>
+</div>
 
-            <!-- FEED -->
-            <div class="feed-posts">
-                <div class="empty-state" style="min-height: 200px;">
-                    <p>No posts yet. Be the first to post!</p>
-                </div>
-            </div>
+<!-- FEED -->
+<div class="feed-posts" id="feedPosts">
+</div>
 
         </main>
 
@@ -66,5 +64,6 @@
 
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
+    <script src="feed.js"></script>
 </body>
 </html>

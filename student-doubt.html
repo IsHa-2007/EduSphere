@@ -1,28 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>doubt-dashboard</title>
-     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="main-content">
             <div class="page-header">
-                <h2>Doubts</h2>
-                <p>no recent activity yet.</p>
+                <h2>Doubt Portal</h2>
+                <p>Ask doubts in your enrolled classes</p>
             </div>
-            <div class="dash-card">
-             <div class="empty-state">
-                <p>no recent activity</p>
+
+            <div class="dash-card" id="studentClassList">
+            </div>
+
+            <div id="studentDoubtSection" style="display:none;">
+                <input type="hidden" id="selectedClassCode">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <button class="btn-outline" onclick="backToStudentClasses()"
+                        style="padding:6px 16px;font-size:13px;">← Back</button>
+                    <h3 id="selectedStudentClass" style="color:white;font-size:18px;"></h3>
                 </div>
-             </div>
-             </main>
+
+                <div class="dash-card" style="margin-bottom:24px;">
+                    <h3>Ask a Doubt</h3>
+                    <div class="input-group">
+                        <label>Topic</label>
+                        <input type="text" id="doubt-subject" placeholder="e.g. Topic">
+                    </div>
+                    <div class="input-group">
+                        <label>Your Doubt</label>
+                        <textarea id="doubt-text" placeholder="Write your doubt here..."
+                            style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;resize:none;height:80px;font-family:'Segoe UI',sans-serif;"></textarea>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+                        <input type="checkbox" id="anonymous-check">
+                        <label for="anonymous-check" style="font-size:13px;color:#aaaaaa;">Post anonymously</label>
+                    </div>
+                    <button class="btn-primary" onclick="postDoubt()">Post Doubt</button>
+                </div>
+
+                <div class="dash-card">
+                    <h3>Doubts in this Class</h3>
+                    <div id="doubtsList"></div>
+                </div>
+            </div>
+        </main>
 
 
-             <div class="ai-float" onclick="toggleChat()">
+        <div class="ai-float" onclick="toggleChat()">
             <button class="ai-float-btn">
                 E<span class="ai-highlight">S</span>
             </button>
@@ -48,7 +80,9 @@
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
-<script src="sidebar.js"></script>
-<script src="dashboard.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="student-doubt.js"></script>
 </body>
+
 </html>

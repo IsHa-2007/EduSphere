@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Classes</title>
+     <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="main-content">
+      
+    <div class="page-header">
+    <h2>My Classes</h2>
+    <p>Classes you have joined</p>
+</div>
+
+<div class="dash-card" style="margin-bottom: 24px;">
+    <h3>Join a Class</h3>
+    <div style="display:flex; gap:12px; align-items:center;">
+        <input type="text" id="joinCode" placeholder="Enter class code e.g. AB1234" style="flex:1; padding:10px 14px; background:rgba(255,255,255,0.05); border:1px solid rgba(0,149,255,0.2); border-radius:8px; color:white; font-size:14px; outline:none;">
+        <button class="btn-primary" onclick="joinClass()">Join</button>
+    </div>
+</div>
+
+<div class="dash-card">
+    <h3>Joined Classes</h3>
+    <div id="joinedClasses">
+        <div class="empty-state">
+            <p>No classes joined yet.</p>
+        </div>
+    </div>
+</div>
+ 
+    </main>
+</div>
+
+    <script src="sidebar.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="student-classes.js"></script>
+</body>
+</html>

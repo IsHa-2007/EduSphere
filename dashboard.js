@@ -47,3 +47,21 @@ function sendMessage() {
 
     messages.scrollTop = messages.scrollHeight;
 }
+function loadDashboardAnnouncements() {
+    const container = document.getElementById('announcements-section');
+    if (!container) return;
+
+    const announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
+
+    if (announcements.length === 0) {
+        container.innerHTML = '<p style="color:#444;font-size:13px;">No announcements yet.</p>';
+        return;
+    }
+
+    container.innerHTML = announcements.slice(0, 3).map(a => `
+        <div class="announcement-item">
+            <p class="ann-item-title">${a.title} <span class="ann-badge ${a.type}">${a.type}</span></p>
+            <p class="ann-item-meta">${a.teacher} · ${a.time}</p>
+        </div>
+    `).join('');
+}

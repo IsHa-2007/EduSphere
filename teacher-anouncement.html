@@ -1,31 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduSphere-teacher Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="dashboard">
-       <aside class="sidebar" id="sidebar"></aside>
-            <main class="main-content">
-             <div class="page-header">
-    <h2>Announcements</h2>
-    <p>Post announcements for your students</p>
-</div>
-<div class="dash-card">
-    <div class="empty-state">
-        <p>No announcements yet.</p>
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Announcements</h2>
+                <p>Post important updates for your students</p>
+            </div>
+
+            <div class="dash-card" style="margin-bottom:24px;">
+                <h3>New Announcement</h3>
+                <div class="input-group">
+                    <label>Title</label>
+                    <input type="text" id="ann-title" placeholder="e.g. Mid-term schedule">
+                </div>
+                <div class="input-group">
+                    <label>Type</label>
+                    <select id="ann-type"
+                        style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;">
+                        <option value="general" style="background:#0d0d1a;">General</option>
+                        <option value="quiz" style="background:#0d0d1a;">Quiz</option>
+                        <option value="exam" style="background:#0d0d1a;">Exam</option>
+                        <option value="urgent" style="background:#0d0d1a;">Urgent</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Content</label>
+                    <textarea id="ann-content" placeholder="Write announcement..."
+                        style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;resize:none;height:80px;font-family:'Segoe UI',sans-serif;"></textarea>
+                </div>
+                <button class="btn-primary" onclick="postAnnouncement()">Post</button>
+            </div>
+
+            <div class="dash-card">
+                <h3>Posted Announcements</h3>
+                <div id="announcementsList"></div>
+            </div>
     </div>
-</div>
-            </main>
-            <div class="ai-float" onclick="toggleChat()">
-            <button class="ai-float-btn">
-                E<span class="ai-highlight">S</span>
-            </button>
-            <span class="ai-float-label">AI Assistant</span>
-        </div>
+    </main>
+    <div class="ai-float" onclick="toggleChat()">
+        <button class="ai-float-btn">
+            E<span class="ai-highlight">S</span>
+        </button>
+        <span class="ai-float-label">AI Assistant</span>
+    </div>
     <div class="ai-chat-popup" id="aiChat">
         <div class="chat-header">
             <div class="chat-title">
@@ -43,8 +70,10 @@
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
-            </div>
+    </div>
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
+    <script src="teacher-announcement.js"></script>
 </body>
+
 </html>

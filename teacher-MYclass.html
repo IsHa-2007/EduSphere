@@ -14,11 +14,33 @@
     <h2>My Classes</h2>
     <p>All your assigned classes</p>
 </div>
+          <div class="page-header">
+    <h2>My Classes</h2>
+    <p>Create and manage your classes</p>
+</div>
+
+<div class="dash-card" style="margin-bottom: 24px;">
+    <h3>Create New Class</h3>
+    <div class="input-group">
+        <label>Class Name</label>
+        <input type="text" id="class-name" placeholder="e.g. CSE Section A">
+    </div>
+    <div class="input-group">
+        <label>Subject</label>
+        <input type="text" id="class-subject" placeholder="e.g. Data Structures">
+    </div>
+    <button class="btn-primary" onclick="createClass()">Create Class</button>
+</div>
+
 <div class="dash-card">
-    <div class="empty-state">
-        <p>No classes assigned yet.</p>
+    <h3>Your Classes</h3>
+    <div id="classList">
+        <div class="empty-state">
+            <p>No classes created yet.</p>
+        </div>
     </div>
 </div>
+
             </main>
             <div class="ai-float" onclick="toggleChat()">
             <button class="ai-float-btn">
@@ -45,6 +67,7 @@
     </div>
             </div>
     <script src="sidebar.js"></script>
-    <script src="dashboard.js"></script>
+<script src="dashboard.js"></script>
+<script src="teacher-class.js"></script>
 </body>
 </html>

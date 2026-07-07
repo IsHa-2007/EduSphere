@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSphere - Edit Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Edit Profile</h2>
+                <p>Update your personal information</p>
+            </div>
+
+            <div class="edit-profile-card">
+                <div class="edit-avatar-section">
+                    <div class="edit-avatar" id="avatarPreview">👤</div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none">
+                    <button class="btn-outline" onclick="document.getElementById('avatarInput').click()">Change Photo</button>
+                </div>
+
+                <div class="edit-form">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" id="edit-name" placeholder="Your full name">
+                    </div>
+                    <div class="input-group">
+                        <label>Bio</label>
+                        <input type="text" id="edit-bio" placeholder="Tell something about yourself">
+                    </div>
+                    <div class="input-group">
+                        <label>Skills</label>
+                        <input type="text" id="edit-skills" placeholder="e.g. Python, Web Dev, DSA">
+                    </div>
+                    <div class="input-group">
+                        <label>Institution</label>
+                        <input type="text" id="edit-institution" placeholder="Your college or university">
+                    </div>
+                    <div class="input-group">
+                        <label>Previous Institution</label>
+                        <input type="text" id="edit-prev-institution" placeholder="Previous college (if any)">
+                    </div>
+                    <button class="btn-primary btn-full" onclick="saveProfile()">Save Changes</button>
+                    <button class="btn-outline btn-full" style="margin-top:8px" onclick="window.location.href='profile.html'">Cancel</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="sidebar.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="edit-profile.js"></script>
+</body>
+</html>

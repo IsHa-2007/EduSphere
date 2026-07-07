@@ -10,6 +10,7 @@ const studentLinks = `
     <a href="student-notes.html" class="nav-item">Notes</a>
     <a href="student-quiz.html" class="nav-item">Quizzes</a>
     <a href="student-performance.html" class="nav-item">Performance</a>
+    <a href="student-classes.html" class="nav-item">My Classes</a>
 `;
 
 const teacherLinks = `

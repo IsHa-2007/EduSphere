@@ -1,32 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduSphere-teacher Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
-            <main class="main-content">
-        <div class="page-header">
-           <h2>Create Quiz</h2>
-            <p>Create and manage quizzes</p>
-        </div>
-        <div class="dash-card">
-        <div class="empty-state">
-        <p>No quizzes created yet.</p>
-     </div>
-     </div>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Create Quiz</h2>
+                <p>Schedule quizzes for your students</p>
+            </div>
 
-            </main>
-            <div class="ai-float" onclick="toggleChat()">
-            <button class="ai-float-btn">
-                E<span class="ai-highlight">S</span>
-            </button>
-            <span class="ai-float-label">AI Assistant</span>
-        </div>
+            <div class="dash-card" style="margin-bottom:24px;">
+                <h3>New Quiz</h3>
+                <div class="input-group">
+                    <label>Quiz Title</label>
+                    <input type="text" id="quiz-title" placeholder="e.g. Unit 2 Quiz">
+                </div>
+                <div class="input-group">
+                    <label>Subject</label>
+                    <input type="text" id="quiz-subject" placeholder="e.g. DSA">
+                </div>
+                <div class="input-group">
+                    <label>Deadline</label>
+                    <input type="date" id="quiz-deadline">
+                </div>
+                <div class="input-group">
+                    <label>Question 1</label>
+                    <input type="text" id="q1" placeholder="Write question 1">
+                </div>
+                <div class="input-group">
+                    <label>Question 2</label>
+                    <input type="text" id="q2" placeholder="Write question 2">
+                </div>
+                <div class="input-group">
+                    <label>Question 3</label>
+                    <input type="text" id="q3" placeholder="Write question 3">
+                </div>
+                <button class="btn-primary" onclick="createQuiz()">Create Quiz</button>
+            </div>
+
+            <div class="dash-card">
+                <h3>Created Quizzes</h3>
+                <div id="teacherQuizList"></div>
+            </div>
+    </div>
+
+    </main>
+    <div class="ai-float" onclick="toggleChat()">
+        <button class="ai-float-btn">
+            E<span class="ai-highlight">S</span>
+        </button>
+        <span class="ai-float-label">AI Assistant</span>
+    </div>
     <div class="ai-chat-popup" id="aiChat">
         <div class="chat-header">
             <div class="chat-title">
@@ -44,8 +76,10 @@
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
-            </div>
+    </div>
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
+    <script src="teacher-quiz.js"></script>
 </body>
+
 </html>
