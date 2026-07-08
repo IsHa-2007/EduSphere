@@ -1,55 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>attendence-dashboard</title>
+    <title>EduSphere - Attendance Records</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="main-content">
             <div class="page-header">
-                <h2>Attendance</h2>
-                <p>Your attendance across all classes</p>
+                <h2>Attendance Records</h2>
+                <p>View complete attendance history</p>
             </div>
 
-            <div id="studentAttendanceView"></div>
+            <div class="dash-card" id="recordClassList"></div>
+
+            <div id="recordSection" style="display:none;">
+                <input type="hidden" id="recordClassCode">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <button class="btn-outline" onclick="backToRecordClasses()" style="padding:6px 16px;font-size:13px;">← Back</button>
+                    <h3 id="recordClassName" style="color:white;font-size:18px;"></h3>
+                </div>
+                <div id="attendanceRecords"></div>
+            </div>
         </main>
 
-
         <div class="ai-float" onclick="toggleChat()">
-            <button class="ai-float-btn">
-                E<span class="ai-highlight">S</span>
-            </button>
+            <button class="ai-float-btn">E<span class="ai-highlight">S</span></button>
             <span class="ai-float-label">AI Assistant</span>
         </div>
-
     </div>
 
     <div class="ai-chat-popup" id="aiChat">
         <div class="chat-header">
-            <div class="chat-title">
-                <span>Edu<span class="highlight">Sphere</span> AI</span>
-            </div>
+            <div class="chat-title"><span>Edu<span class="highlight">Sphere</span> AI</span></div>
             <button class="chat-close" onclick="toggleChat()">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="msg ai-msg">
-                <p>Hi! I'm EduSphere AI. I'll be fully functional soon. How can I help you today?</p>
-            </div>
+            <div class="msg ai-msg"><p>Hi! I'm EduSphere AI. How can I help you today?</p></div>
         </div>
         <div class="chat-input-row">
             <input type="text" id="chatInput" placeholder="Ask anything..." />
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
+
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
-    <script src="student-attendance.js"></script>
+    <script src="teacher-attendance-records.js"></script>
 </body>
-
 </html>

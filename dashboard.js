@@ -1,67 +1,52 @@
 document.addEventListener('DOMContentLoaded', function() {
     const name = localStorage.getItem('name');
-    const role = localStorage.getItem('role');
-
     if (name) {
         const username = document.getElementById('username');
         if (username) username.textContent = name;
-
         const profileName = document.getElementById('profile-name');
         if (profileName) profileName.textContent = name;
     }
 
-    if (role) {
-        const profileRole = document.getElementById('profile-role');
-        if (profileRole) profileRole.textContent = role;
-    }
+    loadDashboardAnnouncements();
+    loadUpcomingQuizzes();
+    loadAttendanceSummary();
+    loadJoinedClasses();
 });
 
-function toggleChat() {
-    const chat = document.getElementById('aiChat');
-    chat.classList.toggle('open');
-}
-
-function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const messages = document.getElementById('chatMessages');
-    const text = input.value.trim();
-
-    if (text === '') return;
-
-    messages.innerHTML += `
-        <div class="msg user-msg">
-            <p>${text}</p>
-        </div>
-    `;
-
-    input.value = '';
-
-    setTimeout(() => {
-        messages.innerHTML += `
-            <div class="msg ai-msg">
-                <p>I'm EduSphere AI! Full functionality coming soon. Stay tuned! 🚀</p>
-            </div>
-        `;
-        messages.scrollTop = messages.scrollHeight;
-    }, 800);
-
-    messages.scrollTop = messages.scrollHeight;
-}
-function loadDashboardAnnouncements() {
-    const container = document.getElementById('announcements-section');
+function loadAttendanceSummary() {
+    const container = document.getElementById('attendance-section');
     if (!container) return;
 
-    const announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
+    const myClasses = JSON.parse(localStorage.getItem('myClasses') || '[]');
+    const studentName = localStorage.getItem('name') || '';
+    const attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
 
-    if (announcements.length === 0) {
-        container.innerHTML = '<p style="color:#444;font-size:13px;">No announcements yet.</p>';
+    if (myClasses.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No classes joined yet.</p></div>';
         return;
     }
 
-    container.innerHTML = announcements.slice(0, 3).map(a => `
-        <div class="announcement-item">
-            <p class="ann-item-title">${a.title} <span class="ann-badge ${a.type}">${a.type}</span></p>
-            <p class="ann-item-meta">${a.teacher} · ${a.time}</p>
-        </div>
-    `).join('');
+    container.innerHTML = myClasses.map(cls => {
+        const dateKeys = Object.keys(attendance).filter(k => k.startsWith(cls.code));
+        let present = 0;
+        let total = dateKeys.length;
+
+        dateKeys.forEach(key => {
+            if (attendance[key][studentName] === 'present') present++;
+        });
+
+        const pct = total === 0 ? 0 : Math.round((present / total) * 100);
+        let color = '#00cc66';
+        if (pct < 75) color = '#ff4444';
+        else if (pct < 80) color = '#ffcc00';
+
+        return `
+        <div class="subject-row" style="margin-bottom:10px;">
+            <span style="font-size:13px;color:white;min-width:120px;">${cls.name}</span>
+            <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;margin:0 12px;">
+                <div style="width:${pct}%;height:100%;background:${color};border-radius:99px;"></div>
+            </div>
+            <span style="font-size:12px;color:${color};min-width:40px;text-align:right;">${pct}%</span>
+        </div>`;
+    }).join('');
 }

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduSphere - Teacher Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
@@ -19,48 +21,53 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <p class="stat-label">Total Students</p>
-                    <h3 class="stat-value">---</h3>
-                    <p class="stat-sub">Assigned to you</p>
+                    <h3 class="stat-value" id="totalStudents">---</h3>
+                    <p class="stat-sub">Across all classes</p>
                 </div>
                 <div class="stat-card">
-                    <p class="stat-label">Classes Today</p>
-                    <h3 class="stat-value">---</h3>
-                    <p class="stat-sub">Scheduled</p>
+                    <p class="stat-label">Total Classes</p>
+                    <h3 class="stat-value" id="totalClasses">---</h3>
+                    <p class="stat-sub">Created</p>
                 </div>
                 <div class="stat-card">
                     <p class="stat-label">Pending Doubts</p>
-                    <h3 class="stat-value">---</h3>
+                    <h3 class="stat-value" id="pendingDoubts">---</h3>
                     <p class="stat-sub">Unanswered</p>
                 </div>
                 <div class="stat-card">
-                    <p class="stat-label">Quizzes Created</p>
-                    <h3 class="stat-value">---</h3>
-                    <p class="stat-sub">This semester</p>
+                    <p class="stat-label">Quizzes</p>
+                    <h3 class="stat-value" id="totalQuizzes">---</h3>
+                    <p class="stat-sub">Scheduled</p>
                 </div>
             </div>
 
-            <div class="dash-grid" style="margin-top: 24px;">
+            <div class="dash-grid" style="margin-top:24px;">
                 <div class="dash-card">
                     <h3>My Classes</h3>
-                    <div class="empty-state">
-                        <p>No classes assigned yet.</p>
+                    <div id="teacherHomeClasses">
+                        <div class="empty-state">
+                            <p>No classes yet.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="dash-card">
-                    <h3>Recent Student Doubts</h3>
-                    <div class="empty-state">
-                        <p>No doubts yet.</p>
+                    <h3>Recent Announcements</h3>
+                    <div id="teacherHomeAnnouncements">
+                        <div class="empty-state">
+                            <p>No announcements yet.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
+    </div>
+    </main>
 
-        <div class="ai-float" onclick="toggleChat()">
-            <button class="ai-float-btn">
-                E<span class="ai-highlight">S</span>
-            </button>
-            <span class="ai-float-label">AI Assistant</span>
-        </div>
+    <div class="ai-float" onclick="toggleChat()">
+        <button class="ai-float-btn">
+            E<span class="ai-highlight">S</span>
+        </button>
+        <span class="ai-float-label">AI Assistant</span>
+    </div>
 
     </div>
 
@@ -81,8 +88,9 @@
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
-
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
+    <script src="teacher-dashboard.js"></script>
 </body>
+
 </html>

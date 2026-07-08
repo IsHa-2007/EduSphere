@@ -185,12 +185,79 @@ function updateTimerDisplay() {
 
 function submitQuiz() {
     clearInterval(timerInterval);
+    
+    let score = 0;
+    let total = currentQuiz.questions.length;
+    let results = [];
+
+    currentQuiz.questions.forEach((q, i) => {
+        let studentAnswer = '';
+        
+        if (q.type === 'mcq') {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            studentAnswer = selected ? selected.value : '';
+        } else {
+            const input = document.getElementById(`ans-${i}`);
+            studentAnswer = input ? input.value.trim() : '';
+        }
+
+        const isCorrect = studentAnswer.toUpperCase() === q.answer.toUpperCase();
+        if (isCorrect) score++;
+
+        results.push({
+            question: q.text,
+            type: q.type,
+            studentAnswer: studentAnswer,
+            correctAnswer: q.answer,
+            isCorrect: isCorrect
+        });
+    });
+
     const submittedQuizzes = JSON.parse(localStorage.getItem('submittedQuizzes') || '[]');
-    submittedQuizzes.push(currentQuiz.id);
+    submittedQuizzes.push({
+        quizId: currentQuiz.id,
+        quizTitle: currentQuiz.title,
+        subject: currentQuiz.subject,
+        score: score,
+        total: total,
+        results: results,
+        time: new Date().toLocaleString(),
+        studentName: localStorage.getItem('name') || 'Student'
+    });
     localStorage.setItem('submittedQuizzes', JSON.stringify(submittedQuizzes));
-    alert('Quiz submitted successfully!');
+
+    showQuizResult(score, total, results);
+}
+
+function showQuizResult(score, total, results) {
     document.getElementById('quizAttemptSection').style.display = 'none';
-    document.getElementById('studentQuizSection').style.display = 'block';
-    const code = document.getElementById('currentClassCode').value;
-    loadClassQuizzes(code);
+    document.getElementById('quizResultSection').style.display = 'block';
+
+    const percentage = Math.round((score / total) * 100);
+    let grade = '';
+    let gradeColor = '';
+
+    if (percentage >= 80) { grade = 'Excellent! '; gradeColor = '#00cc66'; }
+    else if (percentage >= 60) { grade = 'Good! '; gradeColor = '#0095ff'; }
+    else if (percentage >= 40) { grade = 'Average '; gradeColor = '#ffcc00'; }
+    else { grade = 'Need Improvement '; gradeColor = '#ff4444'; }
+
+    document.getElementById('quizResultContent').innerHTML = `
+        <div style="text-align:center;margin-bottom:32px;">
+            <h2 style="font-size:48px;font-weight:700;color:${gradeColor};">${score}/${total}</h2>
+            <p style="font-size:20px;color:${gradeColor};margin-top:8px;">${grade}</p>
+            <p style="font-size:14px;color:#aaaaaa;margin-top:4px;">${percentage}% Score</p>
+        </div>
+
+        <h3 style="color:white;font-size:16px;margin-bottom:16px;">Question Review:</h3>
+        ${results.map((r, i) => `
+            <div class="result-card ${r.isCorrect ? 'correct' : 'incorrect'}">
+                <p style="font-size:13px;color:white;margin-bottom:8px;"><strong>Q${i+1}.</strong> ${r.question}</p>
+                <p style="font-size:12px;color:#aaaaaa;">Your answer: <span style="color:${r.isCorrect ? '#00cc66' : '#ff4444'}">${r.studentAnswer || 'Not answered'}</span></p>
+                ${!r.isCorrect ? `<p style="font-size:12px;color:#aaaaaa;">Correct answer: <span style="color:#00cc66">${r.correctAnswer}</span></p>` : ''}
+            </div>
+        `).join('')}
+
+        <button class="btn-primary btn-full" style="margin-top:24px;" onclick="backToQuizClasses()">Back to Quizzes</button>
+    `;
 }
