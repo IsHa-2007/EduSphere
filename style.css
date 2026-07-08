@@ -1405,3 +1405,47 @@ body {
     padding: 2px 8px;
     border-radius: 99px;
 }
+.question-block {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(0,149,255,0.15);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+.timer-box {
+    background: rgba(0,149,255,0.1);
+    border: 1px solid rgba(0,149,255,0.3);
+    border-radius: 12px;
+    padding: 12px 24px;
+    text-align: center;
+}
+
+.mcq-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.mcq-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.mcq-option:hover {
+    border-color: #0095ff;
+    background: rgba(0,149,255,0.08);
+}
+
+.mcq-option input {
+    accent-color: #0095ff;
+}

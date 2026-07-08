@@ -14,12 +14,43 @@
         <main class="main-content">
             <div class="page-header">
                 <h2>Quizzes</h2>
-                <p>Attempt quizzes assigned by your teachers</p>
+                <p>Attempt quizzes for your enrolled classes</p>
             </div>
 
-            <div class="dash-card">
-                <h3>Available Quizzes</h3>
-                <div id="studentQuizList"></div>
+            <!-- CLASS LIST -->
+            <div class="dash-card" id="studentQuizClassList"></div>
+
+            <!-- QUIZ LIST FOR CLASS -->
+            <div id="studentQuizSection" style="display:none;">
+                <input type="hidden" id="currentClassCode">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <button class="btn-outline" onclick="backToQuizClasses()" style="padding:6px 16px;font-size:13px;">←
+                        Back</button>
+                    <h3 id="selectedQuizClass" style="color:white;font-size:18px;"></h3>
+                </div>
+                <div class="dash-card">
+                    <h3>Available Quizzes</h3>
+                    <div id="quizList"></div>
+                </div>
+            </div>
+
+            <!-- QUIZ ATTEMPT -->
+            <div id="quizAttemptSection" style="display:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                    <div>
+                        <h2 id="attemptQuizTitle" style="color:white;font-size:20px;"></h2>
+                        <p id="attemptQuizSubject" style="color:#aaaaaa;font-size:13px;margin-top:4px;"></p>
+                    </div>
+                    <div class="timer-box">
+                        <p style="font-size:11px;color:#aaaaaa;margin-bottom:4px;">Time Remaining</p>
+                        <h2 id="timerDisplay" style="color:#0095ff;font-size:28px;font-weight:700;">00:00</h2>
+                    </div>
+                </div>
+
+                <div id="attemptQuestions"></div>
+
+                <button class="btn-primary btn-full" style="margin-top:24px;" onclick="submitQuiz()">Submit
+                    Quiz</button>
             </div>
         </main>
 
