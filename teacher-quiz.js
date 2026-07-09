@@ -195,15 +195,59 @@ function loadTeacherQuizzes(classCode) {
         return;
     }
 
-    container.innerHTML = classQuizzes.map(q => `
-        <div class="note-card">
-            <div class="note-info">
-                <h3>${q.title}</h3>
-                <p>${q.subject} · ${q.questions.length} questions · ${new Date(q.datetime).toLocaleString()} · ${q.timelimit} mins · Key: ${q.key}</p>
+    const submittedQuizzes = JSON.parse(localStorage.getItem('submittedQuizzes') || '[]');
+
+    container.innerHTML = classQuizzes.map(q => {
+        const results = submittedQuizzes.filter(s => s.quizId === q.id);
+        return `
+        <div class="note-card" style="flex-direction:column;align-items:flex-start;cursor:pointer;" onclick="toggleQuizResults('results-${q.id}')">
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+                <div class="note-info">
+                    <h3>${q.title}</h3>
+                    <p>${q.subject} · ${q.questions.length} questions · ${new Date(q.datetime).toLocaleString()} · ${q.timelimit} mins · Key: ${q.key}</p>
+                    <p style="color:#0095ff;font-size:12px;margin-top:4px;">${results.length} submissions</p>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <span style="font-size:12px;color:#aaaaaa;">▼ Results</span>
+                    <button class="post-action-btn" onclick="event.stopPropagation();deleteQuiz(${q.id})">🗑️</button>
+                </div>
             </div>
-            <button class="post-action-btn" onclick="deleteQuiz(${q.id})">🗑️</button>
-        </div>
-    `).join('');
+
+            <div id="results-${q.id}" style="display:none;width:100%;margin-top:16px;border-top:1px solid rgba(255,255,255,0.05);padding-top:16px;">
+                ${results.length === 0 ?
+                    '<p style="color:#444;font-size:13px;">No submissions yet.</p>' :
+                    `<table style="width:100%;border-collapse:collapse;">
+                        <thead>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                                <th style="text-align:left;padding:8px;font-size:12px;color:#aaaaaa;">Student</th>
+                                <th style="text-align:center;padding:8px;font-size:12px;color:#aaaaaa;">Score</th>
+                                <th style="text-align:center;padding:8px;font-size:12px;color:#aaaaaa;">%</th>
+                                <th style="text-align:right;padding:8px;font-size:12px;color:#aaaaaa;">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${[...results].sort((a,b) => b.score - a.score).map(r => {
+                                const pct = Math.round((r.score / r.total) * 100);
+                                let color = pct >= 80 ? '#00cc66' : pct >= 60 ? '#0095ff' : pct >= 40 ? '#ffcc00' : '#ff4444';
+                                return `
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding:8px;font-size:13px;color:white;">${r.studentName}</td>
+                                    <td style="padding:8px;text-align:center;font-size:13px;color:white;">${r.score}/${r.total}</td>
+                                    <td style="padding:8px;text-align:center;font-size:14px;font-weight:700;color:${color};">${pct}%</td>
+                                    <td style="padding:8px;text-align:right;font-size:11px;color:#aaaaaa;">${r.time}</td>
+                                </tr>`;
+                            }).join('')}
+                        </tbody>
+                    </table>`
+                }
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleQuizResults(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 function deleteQuiz(id) {

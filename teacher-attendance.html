@@ -19,6 +19,7 @@
 
             <div class="dash-card" id="attendanceClassList"></div>
 
+
             <div id="attendanceSection" style="display:none;">
                 <input type="hidden" id="attendanceClassCode">
                 <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
@@ -32,6 +33,14 @@
                     <input type="date" id="attendance-date"
                         onchange="loadStudentsForAttendance(document.getElementById('attendanceClassCode').value)"
                         style="padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;">
+                </div>
+                <div id="attendanceRecordsSection" style="display:none;">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                        <button class="btn-outline" onclick="backFromRecords()"
+                            style="padding:6px 16px;font-size:13px;">← Back</button>
+                        <h3 id="recordsClassName" style="color:white;font-size:18px;"></h3>
+                    </div>
+                    <div id="recordsList"></div>
                 </div>
 
                 <div class="dash-card">
@@ -70,6 +79,7 @@
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
     <script src="teacher-attendance.js"></script>
+    <script src="teacher-attendance-records.js"></script>
 </body>
 
 </html>

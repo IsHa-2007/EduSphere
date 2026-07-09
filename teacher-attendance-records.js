@@ -1,44 +1,44 @@
-document.addEventListener('DOMContentLoaded', function() {
-    loadAttendanceRecordClasses();
-});
-
-function loadAttendanceRecordClasses() {
+function loadAttendanceClasses() {
     const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
-    const container = document.getElementById('recordClassList');
+    const container = document.getElementById('attendanceClassList');
 
     if (classes.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>No classes yet.</p></div>';
+        container.innerHTML = '<div class="empty-state"><p>No classes created yet.</p></div>';
         return;
     }
 
     container.innerHTML = classes.map(cls => `
-        <div class="class-card" onclick="openAttendanceRecords('${cls.code}', '${cls.name}')">
+        <div class="class-card">
             <div class="class-info">
                 <h3>${cls.name}</h3>
                 <p>${cls.subject} · ${cls.students.length} students</p>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn-outline" onclick="viewAttendanceRecords('${cls.code}', '${cls.name}')" style="padding:6px 14px;font-size:12px;">📋 Records</button>
+                <button class="btn-primary" onclick="openAttendanceClass('${cls.code}', '${cls.name}')" style="padding:6px 14px;font-size:12px;">Mark ✓</button>
             </div>
         </div>
     `).join('');
 }
 
-function openAttendanceRecords(code, name) {
-    document.getElementById('recordClassList').style.display = 'none';
-    document.getElementById('recordSection').style.display = 'block';
-    document.getElementById('recordClassName').textContent = name;
-    document.getElementById('recordClassCode').value = code;
-    loadAttendanceRecords(code);
+function viewAttendanceRecords(code, name) {
+    document.getElementById('attendanceClassList').style.display = 'none';
+    document.getElementById('attendanceSection').style.display = 'none';
+    document.getElementById('attendanceRecordsSection').style.display = 'block';
+    document.getElementById('recordsClassName').textContent = name;
+    loadRecords(code);
 }
 
-function loadAttendanceRecords(code) {
+function loadRecords(code) {
     const attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
     const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
     const cls = classes.find(c => c.code === code);
-    const container = document.getElementById('attendanceRecords');
+    const container = document.getElementById('recordsList');
 
     const dateKeys = Object.keys(attendance).filter(k => k.startsWith(code));
 
     if (dateKeys.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>No attendance records yet.</p></div>';
+        container.innerHTML = '<div class="empty-state"><p>No records yet.</p></div>';
         return;
     }
 
@@ -53,14 +53,14 @@ function loadAttendanceRecords(code) {
 
         return `
         <div class="dash-card" style="margin-bottom:16px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <h3 style="color:white;">${date}</h3>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <h3 style="color:white;font-size:15px;">${date}</h3>
                 <div style="text-align:right;">
                     <p style="font-size:18px;font-weight:700;color:#0095ff;">${presentCount}/${total}</p>
                     <p style="font-size:11px;color:#aaaaaa;">Present</p>
                 </div>
             </div>
-            <div style="width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;margin-bottom:16px;">
+            <div style="width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;margin-bottom:12px;">
                 <div style="width:${total > 0 ? Math.round((presentCount/total)*100) : 0}%;height:100%;background:#0095ff;border-radius:99px;"></div>
             </div>
             <table style="width:100%;border-collapse:collapse;">
@@ -89,8 +89,8 @@ function loadAttendanceRecords(code) {
     }).join('');
 }
 
-function backToRecordClasses() {
-    document.getElementById('recordClassList').style.display = 'block';
-    document.getElementById('recordSection').style.display = 'none';
-    loadAttendanceRecordClasses();
+function backFromRecords() {
+    document.getElementById('attendanceRecordsSection').style.display = 'none';
+    document.getElementById('attendanceClassList').style.display = 'block';
+    loadAttendanceClasses();
 }
