@@ -7,46 +7,51 @@ document.addEventListener('DOMContentLoaded', function() {
         if (profileName) profileName.textContent = name;
     }
 
+    loadDashboardStats();
     loadDashboardAnnouncements();
     loadUpcomingQuizzes();
     loadAttendanceSummary();
-    loadJoinedClasses();
 });
 
-function loadAttendanceSummary() {
-    const container = document.getElementById('attendance-section');
-    if (!container) return;
-
+function loadDashboardStats() {
     const myClasses = JSON.parse(localStorage.getItem('myClasses') || '[]');
     const studentName = localStorage.getItem('name') || '';
     const attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+    const submittedQuizzes = JSON.parse(localStorage.getItem('submittedQuizzes') || '[]');
+    const teacherQuizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+    const myCodes = myClasses.map(c => c.code);
+    const now = new Date();
 
-    if (myClasses.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>No classes joined yet.</p></div>';
-        return;
-    }
-
-    container.innerHTML = myClasses.map(cls => {
+    // attendance %
+    let totalPresent = 0, totalDays = 0;
+    myClasses.forEach(cls => {
         const dateKeys = Object.keys(attendance).filter(k => k.startsWith(cls.code));
-        let present = 0;
-        let total = dateKeys.length;
-
+        totalDays += dateKeys.length;
         dateKeys.forEach(key => {
-            if (attendance[key][studentName] === 'present') present++;
+            if (attendance[key][studentName] === 'present') totalPresent++;
         });
+    });
+    const attendancePct = totalDays > 0 ? Math.round((totalPresent / totalDays) * 100) : 0;
 
-        const pct = total === 0 ? 0 : Math.round((present / total) * 100);
-        let color = '#00cc66';
-        if (pct < 75) color = '#ff4444';
-        else if (pct < 80) color = '#ffcc00';
+    // upcoming quizzes
+    const upcomingQuizzes = teacherQuizzes.filter(q => 
+        myCodes.includes(q.classCode) && new Date(q.datetime) > now
+    );
 
-        return `
-        <div class="subject-row" style="margin-bottom:10px;">
-            <span style="font-size:13px;color:white;min-width:120px;">${cls.name}</span>
-            <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;margin:0 12px;">
-                <div style="width:${pct}%;height:100%;background:${color};border-radius:99px;"></div>
-            </div>
-            <span style="font-size:12px;color:${color};min-width:40px;text-align:right;">${pct}%</span>
-        </div>`;
-    }).join('');
+    // submitted quizzes
+    const myQuizzes = submittedQuizzes.filter(q => q.studentName === studentName);
+    const avgScore = myQuizzes.length > 0 ? 
+        Math.round(myQuizzes.reduce((sum, q) => sum + Math.round((q.score/q.total)*100), 0) / myQuizzes.length) : 0;
+
+    const el1 = document.querySelector('.stat-value:nth-child(1)');
+
+    // update stat cards
+    const statValues = document.querySelectorAll('.stat-value');
+    const statSubs = document.querySelectorAll('.stat-sub');
+
+    if (statValues[0]) statValues[0].textContent = attendancePct + '%';
+    if (statValues[1]) statValues[1].textContent = myClasses.length;
+    if (statValues[2]) statValues[2].textContent = upcomingQuizzes.length;
+    if (statValues[3]) statValues[3].textContent = avgScore + '%';
+    if (statSubs[3]) statSubs[3].textContent = 'Avg quiz score';
 }

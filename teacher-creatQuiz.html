@@ -17,7 +17,7 @@
                 <p>Schedule quizzes for your classes</p>
             </div>
 
-            <!-- CLASS LIST VIEW -->
+            <!-- CLASS LIST -->
             <div id="quizClassList">
                 <div class="dash-card">
                     <h3>Select a Class</h3>
@@ -25,17 +25,61 @@
                 </div>
             </div>
 
-            <!-- QUIZ CREATION VIEW -->
+            <!-- QUIZ CREATE SECTION -->
             <div id="quizCreateSection" style="display:none;">
+                <input type="hidden" id="selectedQuizClassCode">
                 <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
                     <button class="btn-outline" onclick="backToQuizClasses()" style="padding:6px 16px;font-size:13px;">←
                         Back</button>
                     <h3 id="selectedQuizClassName" style="color:white;font-size:18px;"></h3>
                 </div>
-                <input type="hidden" id="selectedQuizClassCode">
 
+                <!-- QUIZ STATUS SECTIONS -->
+                <div class="stats-grid" style="margin-bottom:24px;">
+                    <div class="stat-card" style="cursor:pointer;" onclick="toggleSection('scheduledSection')">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <p class="stat-label">Scheduled</p>
+                            <div class="doubt-dot yellow"></div>
+                        </div>
+                        <h3 class="stat-value" id="scheduledCount">0</h3>
+                        <p class="stat-sub">Upcoming quizzes</p>
+                    </div>
+                    <div class="stat-card" style="cursor:pointer;" onclick="toggleSection('liveSection')">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <p class="stat-label">Live</p>
+                            <div class="doubt-dot green"></div>
+                        </div>
+                        <h3 class="stat-value" id="liveCount">0</h3>
+                        <p class="stat-sub">Currently active</p>
+                    </div>
+                    <div class="stat-card" style="cursor:pointer;" onclick="toggleSection('endedSection')">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <p class="stat-label">Ended</p>
+                            <div class="doubt-dot" style="background:#aaaaaa;"></div>
+                        </div>
+                        <h3 class="stat-value" id="endedCount">0</h3>
+                        <p class="stat-sub">Completed quizzes</p>
+                    </div>
+                </div>
+
+                <div id="scheduledSection" class="dash-card" style="margin-bottom:16px;display:none;">
+                    <h3>🟡 Scheduled Quizzes</h3>
+                    <div id="scheduledList"></div>
+                </div>
+
+                <div id="liveSection" class="dash-card" style="margin-bottom:16px;display:none;">
+                    <h3>🟢 Live Quizzes</h3>
+                    <div id="liveList"></div>
+                </div>
+
+                <div id="endedSection" class="dash-card" style="margin-bottom:24px;display:none;">
+                    <h3>⚪ Ended Quizzes</h3>
+                    <div id="endedList"></div>
+                </div>
+
+                <!-- CREATE QUIZ FORM -->
                 <div class="dash-card" style="margin-bottom:24px;">
-                    <h3>Quiz Details</h3>
+                    <h3>Schedule New Quiz</h3>
                     <div class="input-group">
                         <label>Quiz Title</label>
                         <input type="text" id="quiz-title" placeholder="e.g. Unit 2 Quiz">
@@ -51,30 +95,19 @@
                         </div>
                         <div class="input-group">
                             <label>Time Limit (minutes)</label>
-                            <input type="number" id="quiz-timelimit" placeholder="e.g. 30">
+                            <input type="number" id="quiz-timelimit" placeholder="e.g. 30" min="1">
                         </div>
                     </div>
                     <div class="input-group">
-                        <label>Secure Key (students need this to start)</label>
+                        <label>Secure Key</label>
                         <input type="text" id="quiz-key" placeholder="e.g. QUIZ2024">
                     </div>
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-                        <input type="checkbox" id="attendance-restriction">
-                        <label for="attendance-restriction" style="font-size:13px;color:#aaaaaa;">Block students with
-                            less than 75% attendance</label>
-                    </div>
-                    <div class="dash-card" style="margin-bottom:24px;">
-                        <h3>Manage Students</h3>
-                        <p style="font-size:13px;color:#aaaaaa;margin-bottom:16px;">Block students from attempting
-                            quizzes</p>
-                        <div id="blockedStudentsList">
-                            <div class="empty-state">
-                                <p>No students in this class yet.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <input type="hidden" id="editingQuizId" value="">
+                    <button class="btn-primary btn-full" id="scheduleBtn" onclick="createQuiz()">Schedule Quiz</button>
+
                 </div>
 
+                <!-- QUESTIONS -->
                 <div class="dash-card" style="margin-bottom:24px;">
                     <h3>Questions</h3>
                     <div id="questionsContainer"></div>
@@ -84,9 +117,43 @@
 
                 <button class="btn-primary btn-full" onclick="createQuiz()">Schedule Quiz</button>
 
+                <!-- MANAGE STUDENTS -->
                 <div class="dash-card" style="margin-top:24px;">
-                    <h3>Scheduled Quizzes</h3>
-                    <div id="teacherQuizList"></div>
+                    <h3>Manage Students</h3>
+                    <p style="font-size:13px;color:#aaaaaa;margin-bottom:16px;">Control who can attempt quizzes</p>
+
+                    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <input type="number" id="minAttendance" placeholder="Min %" min="0" max="100"
+                                style="width:80px;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:13px;outline:none;">
+                            <button class="btn-outline"
+                                onclick="applyAttendanceRestriction(document.getElementById('selectedQuizClassCode').value)"
+                                style="padding:6px 14px;font-size:12px;">Apply % Block</button>
+                        </div>
+                        <button class="btn-outline"
+                            onclick="allowPresentOnly(document.getElementById('selectedQuizClassCode').value)"
+                            style="padding:6px 14px;font-size:12px;">✅ Allow Present Only</button>
+                        <button class="btn-outline" onclick="clearAllBlocks()"
+                            style="padding:6px 14px;font-size:12px;border-color:#00cc66;color:#00cc66;">🔓 Unblock
+                            All</button>
+                    </div>
+
+                    <div id="manageStudentsList"></div>
+                </div>
+            </div>
+
+            <!-- QUIZ RESULT VIEW -->
+            <div id="quizResultView" style="display:none;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <button class="btn-outline" onclick="backFromResult()" style="padding:6px 16px;font-size:13px;">←
+                        Back</button>
+                    <div>
+                        <h3 id="resultQuizTitle" style="color:white;font-size:18px;"></h3>
+                        <p id="resultQuizMeta" style="color:#aaaaaa;font-size:13px;margin-top:4px;"></p>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <div id="quizResultTable"></div>
                 </div>
             </div>
         </main>

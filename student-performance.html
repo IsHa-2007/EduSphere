@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>performance-dashboard</title>
-     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="main-content">
             <div class="page-header">
-                <h2>performance</h2>
-                <p>no recent activity yet.</p>
+                <h2>Performance</h2>
+                <p>Your overall academic analysis</p>
             </div>
-            <div class="dash-card">
-             <div class="empty-state">
-                <p>no recent activity</p>
-                </div>
-             </div>
-             </main>
+            <div id="performanceContent"></div>
+        </main>
 
 
-             <div class="ai-float" onclick="toggleChat()">
+        <div class="ai-float" onclick="toggleChat()">
             <button class="ai-float-btn">
                 E<span class="ai-highlight">S</span>
             </button>
@@ -48,7 +46,9 @@
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
-<script src="sidebar.js"></script>
-<script src="dashboard.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="student-performance.js"></script>
 </body>
+
 </html>

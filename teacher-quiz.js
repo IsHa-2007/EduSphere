@@ -31,14 +31,140 @@ function openQuizCreate(code, name) {
     questionCount = 0;
     document.getElementById('questionsContainer').innerHTML = '';
     addQuestion();
-    loadTeacherQuizzes(code);
-    loadBlockedStudents(code); 
+    loadQuizSections(code);
+    loadManageStudents(code);
 }
 
 function backToQuizClasses() {
     document.getElementById('quizClassList').style.display = 'block';
     document.getElementById('quizCreateSection').style.display = 'none';
+    document.getElementById('quizResultView').style.display = 'none';
     loadQuizClasses();
+}
+
+function loadQuizSections(code) {
+    const quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+    const classQuizzes = quizzes.filter(q => q.classCode === code);
+    const now = new Date();
+
+    const scheduled = classQuizzes.filter(q => new Date(q.datetime) > now);
+    const live = classQuizzes.filter(q => {
+        const start = new Date(q.datetime);
+        const end = new Date(start.getTime() + q.timelimit * 60000);
+        return start <= now && end > now;
+    });
+    const ended = classQuizzes.filter(q => {
+        const start = new Date(q.datetime);
+        const end = new Date(start.getTime() + q.timelimit * 60000);
+        return end <= now;
+    });
+
+    renderQuizSection('scheduledList', scheduled, 'scheduled');
+    renderQuizSection('liveList', live, 'live');
+    renderQuizSection('endedList', ended, 'ended');
+
+    document.getElementById('scheduledCount').textContent = scheduled.length;
+    document.getElementById('liveCount').textContent = live.length;
+    document.getElementById('endedCount').textContent = ended.length;
+}
+
+function renderQuizSection(containerId, quizzes, type) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (quizzes.length === 0) {
+        container.innerHTML = '<div class="empty-state" style="min-height:60px;"><p>No quizzes here.</p></div>';
+        return;
+    }
+
+    const submittedQuizzes = JSON.parse(localStorage.getItem('submittedQuizzes') || '[]');
+
+    container.innerHTML = quizzes.map(q => {
+        const results = submittedQuizzes.filter(s => s.quizId === q.id);
+        const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
+        const cls = classes.find(c => c.code === q.classCode);
+        const totalStudents = cls ? cls.students.length : 0;
+
+        return `
+        <div class="note-card" style="flex-direction:column;align-items:flex-start;">
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+                <div class="note-info">
+                    <h3>${q.title}</h3>
+                    <p>${q.subject} · ${q.questions.length} questions · ${new Date(q.datetime).toLocaleString()} · ${q.timelimit} mins</p>
+                    ${type === 'ended' ? `<p style="color:#0095ff;font-size:12px;margin-top:4px;">${results.length}/${totalStudents} submitted</p>` : ''}
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    ${type === 'ended' ? 
+                        `<button class="btn-outline" onclick="viewQuizResult(${q.id})" 
+                        style="padding:6px 14px;font-size:12px;">📊 Result</button>` : ''}
+                    <button class="post-action-btn" onclick="deleteQuiz(${q.id}, '${q.classCode}')">🗑️</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function viewQuizResult(quizId) {
+    document.getElementById('quizCreateSection').style.display = 'none';
+    document.getElementById('quizResultView').style.display = 'block';
+
+    const quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+    const quiz = quizzes.find(q => q.id === quizId);
+    const submittedQuizzes = JSON.parse(localStorage.getItem('submittedQuizzes') || '[]');
+    const results = submittedQuizzes.filter(s => s.quizId === quizId);
+    const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
+    const cls = classes.find(c => c.code === quiz.classCode);
+    const totalStudents = cls ? cls.students.length : 0;
+
+    document.getElementById('resultQuizTitle').textContent = quiz.title;
+    document.getElementById('resultQuizMeta').textContent = 
+        `${quiz.subject} · ${results.length}/${totalStudents} students submitted`;
+
+    const container = document.getElementById('quizResultTable');
+
+    if (results.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No submissions yet.</p></div>';
+        return;
+    }
+
+    container.innerHTML = `
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <th style="text-align:left;padding:10px;font-size:12px;color:#aaaaaa;">#</th>
+                    <th style="text-align:left;padding:10px;font-size:12px;color:#aaaaaa;">Student</th>
+                    <th style="text-align:center;padding:10px;font-size:12px;color:#aaaaaa;">Score</th>
+                    <th style="text-align:center;padding:10px;font-size:12px;color:#aaaaaa;">%</th>
+                    <th style="text-align:center;padding:10px;font-size:12px;color:#aaaaaa;">Grade</th>
+                    <th style="text-align:right;padding:10px;font-size:12px;color:#aaaaaa;">Submitted</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${[...results].sort((a,b) => b.score - a.score).map((r, i) => {
+                    const pct = Math.round((r.score / r.total) * 100);
+                    let grade = '', color = '';
+                    if (pct >= 80) { grade = '🟢 Excellent'; color = '#00cc66'; }
+                    else if (pct >= 60) { grade = '🔵 Good'; color = '#0095ff'; }
+                    else if (pct >= 40) { grade = '🟡 Average'; color = '#ffcc00'; }
+                    else { grade = '🔴 Poor'; color = '#ff4444'; }
+
+                    return `
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                        <td style="padding:10px;font-size:13px;color:#aaaaaa;">${i+1}</td>
+                        <td style="padding:10px;font-size:13px;color:white;">${r.studentName}</td>
+                        <td style="padding:10px;text-align:center;font-size:13px;color:white;">${r.score}/${r.total}</td>
+                        <td style="padding:10px;text-align:center;font-size:14px;font-weight:700;color:${color};">${pct}%</td>
+                        <td style="padding:10px;text-align:center;font-size:12px;color:${color};">${grade}</td>
+                        <td style="padding:10px;text-align:right;font-size:11px;color:#aaaaaa;">${r.time}</td>
+                    </tr>`;
+                }).join('')}
+            </tbody>
+        </table>`;
+}
+
+function backFromResult() {
+    document.getElementById('quizResultView').style.display = 'none';
+    document.getElementById('quizCreateSection').style.display = 'block';
 }
 
 function addQuestion() {
@@ -54,7 +180,8 @@ function addQuestion() {
         </div>
         <div class="input-group">
             <label>Type</label>
-            <select id="qtype-${questionCount}" onchange="updateQuestionType(${questionCount})" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;">
+            <select id="qtype-${questionCount}" onchange="updateQuestionType(${questionCount})" 
+            style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;">
                 <option value="mcq" style="background:#0d0d1a;">MCQ</option>
                 <option value="fib" style="background:#0d0d1a;">Fill in the Blank</option>
                 <option value="short" style="background:#0d0d1a;">Short Answer</option>
@@ -86,19 +213,136 @@ function updateQuestionType(num) {
             <div class="input-group"><label>Option B</label><input type="text" id="qb-${num}" placeholder="Option B"></div>
             <div class="input-group"><label>Option C</label><input type="text" id="qc-${num}" placeholder="Option C"></div>
             <div class="input-group"><label>Option D</label><input type="text" id="qd-${num}" placeholder="Option D"></div>
-            <div class="input-group"><label>Correct Answer</label><input type="text" id="qans-${num}" placeholder="e.g. A"></div>
-        `;
-    } else if (type === 'fib') {
-        optionsDiv.innerHTML = `<div class="input-group"><label>Answer</label><input type="text" id="qans-${num}" placeholder="Fill in the blank answer"></div>`;
+            <div class="input-group"><label>Correct Answer</label><input type="text" id="qans-${num}" placeholder="e.g. A"></div>`;
+    } else if (type === 'fib' || type === 'oneword') {
+        optionsDiv.innerHTML = `<div class="input-group"><label>Answer</label><input type="text" id="qans-${num}" placeholder="Answer"></div>`;
     } else if (type === 'short') {
         optionsDiv.innerHTML = `<div class="input-group"><label>Model Answer</label><textarea id="qans-${num}" placeholder="Model answer..." style="width:100%;padding:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;resize:none;height:60px;"></textarea></div>`;
-    } else if (type === 'oneword') {
-        optionsDiv.innerHTML = `<div class="input-group"><label>Answer</label><input type="text" id="qans-${num}" placeholder="One word answer"></div>`;
     }
 }
 
 function removeQuestion(num) {
     document.getElementById(`question-${num}`).remove();
+}
+
+function loadManageStudents(code) {
+    const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
+    const cls = classes.find(c => c.code === code);
+    const container = document.getElementById('manageStudentsList');
+
+    if (!cls || cls.students.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No students joined yet.</p></div>';
+        return;
+    }
+
+    const blockedStudents = JSON.parse(localStorage.getItem('blockedStudents') || '[]');
+    const attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+    const minAttendance = parseInt(document.getElementById('minAttendance')?.value || '0');
+
+    const sortedStudents = [...cls.students].sort();
+
+    container.innerHTML = sortedStudents.map(student => {
+        const isBlocked = blockedStudents.includes(student);
+
+        const dateKeys = Object.keys(attendance).filter(k => k.startsWith(code));
+        let present = 0;
+        let total = dateKeys.length;
+        dateKeys.forEach(key => {
+            if (attendance[key][student] === 'present') present++;
+        });
+        const pct = total === 0 ? 0 : Math.round((present / total) * 100);
+
+        let dotColor = '#00cc66';
+        if (pct < 75) dotColor = '#ff4444';
+        else if (pct < 80) dotColor = '#ffcc00';
+
+        return `
+        <div class="class-card">
+            <div class="class-info" style="display:flex;align-items:center;gap:10px;">
+                <div class="doubt-dot" style="background:${dotColor};box-shadow:0 0 6px ${dotColor};"></div>
+                <div>
+                    <h3>${student}</h3>
+                    <p>Attendance: ${pct}% (${present}/${total})</p>
+                </div>
+            </div>
+            <button class="attendance-btn ${isBlocked ? 'absent-active' : ''}" 
+                onclick="toggleBlockStudent('${student}', '${code}')">
+                ${isBlocked ? '🚫 Blocked' : '✅ Allow'}
+            </button>
+        </div>`;
+    }).join('');
+}
+
+function toggleBlockStudent(student, code) {
+    let blocked = JSON.parse(localStorage.getItem('blockedStudents') || '[]');
+    if (blocked.includes(student)) {
+        blocked = blocked.filter(s => s !== student);
+    } else {
+        blocked.push(student);
+    }
+    localStorage.setItem('blockedStudents', JSON.stringify(blocked));
+    loadManageStudents(code);
+}
+
+function applyAttendanceRestriction(code) {
+    const minPct = parseInt(document.getElementById('minAttendance').value);
+    if (isNaN(minPct) || minPct < 0 || minPct > 100) {
+        alert('Please enter a valid percentage (0-100)');
+        return;
+    }
+
+    const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
+    const cls = classes.find(c => c.code === code);
+    if (!cls) return;
+
+    const attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+    let blocked = JSON.parse(localStorage.getItem('blockedStudents') || '[]');
+
+    cls.students.forEach(student => {
+        const dateKeys = Object.keys(attendance).filter(k => k.startsWith(code));
+        let present = 0;
+        let total = dateKeys.length;
+        dateKeys.forEach(key => {
+            if (attendance[key][student] === 'present') present++;
+        });
+        const pct = total === 0 ? 0 : Math.round((present / total) * 100);
+
+        if (pct < minPct) {
+            if (!blocked.includes(student)) blocked.push(student);
+        } else {
+            blocked = blocked.filter(s => s !== student);
+        }
+    });
+
+    localStorage.setItem('blockedStudents', JSON.stringify(blocked));
+    loadManageStudents(code);
+    alert(`Applied! Students with less than ${minPct}% attendance are blocked.`);
+}
+
+function allowPresentOnly(code) {
+    const today = new Date().toISOString().split('T')[0];
+    const attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+    const dateKey = `${code}_${today}`;
+    const todayAttendance = attendance[dateKey] || {};
+
+    const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
+    const cls = classes.find(c => c.code === code);
+    if (!cls) return;
+
+    let blocked = JSON.parse(localStorage.getItem('blockedStudents') || '[]');
+
+    cls.students.forEach(student => {
+        const status = todayAttendance[student] || 'absent';
+        if (status === 'absent') {
+            if (!blocked.includes(student)) blocked.push(student);
+        } else {
+            blocked = blocked.filter(s => s !== student);
+        }
+    });
+
+    localStorage.setItem('blockedStudents', JSON.stringify(blocked));
+    loadManageStudents(code);
+    alert('Only students marked present today can attempt the quiz!');
 }
 
 function createQuiz() {
@@ -107,37 +351,33 @@ function createQuiz() {
     const datetime = document.getElementById('quiz-datetime').value;
     const timelimit = document.getElementById('quiz-timelimit').value;
     const key = document.getElementById('quiz-key').value.trim();
-    const attendanceRestriction = document.getElementById('attendance-restriction').checked;
     const classCode = document.getElementById('selectedQuizClassCode').value;
-    const className = document.getElementById('selectedQuizClassName').textContent;
 
-    if (title === '' || subject === '' || datetime === '' || key === '') {
-        alert('Please fill title, subject, date/time and secure key!');
+    if (title === '' || subject === '' || datetime === '' || key === '' || timelimit === '') {
+        alert('Please fill all fields!');
         return;
     }
 
     const questions = [];
     const blocks = document.querySelectorAll('.question-block');
 
-    blocks.forEach((block, index) => {
-        const num = index + 1;
-        const type = document.getElementById(`qtype-${block.id.split('-')[1]}`).value;
-        const text = document.getElementById(`qtext-${block.id.split('-')[1]}`).value.trim();
-        const ans = document.getElementById(`qans-${block.id.split('-')[1]}`).value.trim();
+    blocks.forEach(block => {
+        const num = block.id.split('-')[1];
+        const type = document.getElementById(`qtype-${num}`).value;
+        const text = document.getElementById(`qtext-${num}`).value.trim();
+        const ans = document.getElementById(`qans-${num}`)?.value.trim() || '';
 
         if (text === '') return;
 
         const q = { type, text, answer: ans };
-
         if (type === 'mcq') {
             q.options = {
-                A: document.getElementById(`qa-${block.id.split('-')[1]}`).value,
-                B: document.getElementById(`qb-${block.id.split('-')[1]}`).value,
-                C: document.getElementById(`qc-${block.id.split('-')[1]}`).value,
-                D: document.getElementById(`qd-${block.id.split('-')[1]}`).value,
+                A: document.getElementById(`qa-${num}`)?.value || '',
+                B: document.getElementById(`qb-${num}`)?.value || '',
+                C: document.getElementById(`qc-${num}`)?.value || '',
+                D: document.getElementById(`qd-${num}`)?.value || '',
             };
         }
-
         questions.push(q);
     });
 
@@ -149,9 +389,9 @@ function createQuiz() {
     const quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
     const newQuiz = {
         id: Date.now(),
-        title, subject, datetime, timelimit,
-        key, attendanceRestriction,
-        classCode, className,
+        title, subject, datetime,
+        timelimit: parseInt(timelimit),
+        key, classCode,
         questions,
         teacher: localStorage.getItem('name') || 'Teacher',
         time: new Date().toLocaleString()
@@ -160,7 +400,6 @@ function createQuiz() {
     quizzes.unshift(newQuiz);
     localStorage.setItem('teacherQuizzes', JSON.stringify(quizzes));
 
-    // Auto add to announcements
     const announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
     announcements.unshift({
         id: Date.now(),
@@ -173,7 +412,8 @@ function createQuiz() {
     });
     localStorage.setItem('announcements', JSON.stringify(announcements));
 
-    alert('Quiz scheduled successfully!');
+    alert('Quiz scheduled! Auto-added to announcements.');
+
     document.getElementById('quiz-title').value = '';
     document.getElementById('quiz-subject').value = '';
     document.getElementById('quiz-datetime').value = '';
@@ -182,113 +422,76 @@ function createQuiz() {
     questionCount = 0;
     document.getElementById('questionsContainer').innerHTML = '';
     addQuestion();
-    loadTeacherQuizzes(classCode);
-}
-
-function loadTeacherQuizzes(classCode) {
-    const quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
-    const classQuizzes = quizzes.filter(q => q.classCode === classCode);
-    const container = document.getElementById('teacherQuizList');
-
-    if (classQuizzes.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>No quizzes scheduled yet.</p></div>';
-        return;
+    loadQuizSections(classCode);
+     if (editingId) {
+        // remove old quiz
+        let quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+        quizzes = quizzes.filter(q => q.id !== parseInt(editingId));
+        localStorage.setItem('teacherQuizzes', JSON.stringify(quizzes));
+        document.getElementById('editingQuizId').value = '';
+        document.getElementById('scheduleBtn').textContent = 'Schedule Quiz';
     }
-
-    const submittedQuizzes = JSON.parse(localStorage.getItem('submittedQuizzes') || '[]');
-
-    container.innerHTML = classQuizzes.map(q => {
-        const results = submittedQuizzes.filter(s => s.quizId === q.id);
-        return `
-        <div class="note-card" style="flex-direction:column;align-items:flex-start;cursor:pointer;" onclick="toggleQuizResults('results-${q.id}')">
-            <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-                <div class="note-info">
-                    <h3>${q.title}</h3>
-                    <p>${q.subject} · ${q.questions.length} questions · ${new Date(q.datetime).toLocaleString()} · ${q.timelimit} mins · Key: ${q.key}</p>
-                    <p style="color:#0095ff;font-size:12px;margin-top:4px;">${results.length} submissions</p>
-                </div>
-                <div style="display:flex;gap:8px;align-items:center;">
-                    <span style="font-size:12px;color:#aaaaaa;">▼ Results</span>
-                    <button class="post-action-btn" onclick="event.stopPropagation();deleteQuiz(${q.id})">🗑️</button>
-                </div>
-            </div>
-
-            <div id="results-${q.id}" style="display:none;width:100%;margin-top:16px;border-top:1px solid rgba(255,255,255,0.05);padding-top:16px;">
-                ${results.length === 0 ?
-                    '<p style="color:#444;font-size:13px;">No submissions yet.</p>' :
-                    `<table style="width:100%;border-collapse:collapse;">
-                        <thead>
-                            <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
-                                <th style="text-align:left;padding:8px;font-size:12px;color:#aaaaaa;">Student</th>
-                                <th style="text-align:center;padding:8px;font-size:12px;color:#aaaaaa;">Score</th>
-                                <th style="text-align:center;padding:8px;font-size:12px;color:#aaaaaa;">%</th>
-                                <th style="text-align:right;padding:8px;font-size:12px;color:#aaaaaa;">Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${[...results].sort((a,b) => b.score - a.score).map(r => {
-                                const pct = Math.round((r.score / r.total) * 100);
-                                let color = pct >= 80 ? '#00cc66' : pct >= 60 ? '#0095ff' : pct >= 40 ? '#ffcc00' : '#ff4444';
-                                return `
-                                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                                    <td style="padding:8px;font-size:13px;color:white;">${r.studentName}</td>
-                                    <td style="padding:8px;text-align:center;font-size:13px;color:white;">${r.score}/${r.total}</td>
-                                    <td style="padding:8px;text-align:center;font-size:14px;font-weight:700;color:${color};">${pct}%</td>
-                                    <td style="padding:8px;text-align:right;font-size:11px;color:#aaaaaa;">${r.time}</td>
-                                </tr>`;
-                            }).join('')}
-                        </tbody>
-                    </table>`
-                }
-            </div>
-        </div>`;
-    }).join('');
 }
 
-function toggleQuizResults(id) {
-    const el = document.getElementById(id);
-    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-function deleteQuiz(id) {
+function deleteQuiz(id, code) {
     let quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
     quizzes = quizzes.filter(q => q.id !== id);
     localStorage.setItem('teacherQuizzes', JSON.stringify(quizzes));
-    const code = document.getElementById('selectedQuizClassCode').value;
-    loadTeacherQuizzes(code);
-}
-function loadBlockedStudents(classCode) {
-    const classes = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
-    const cls = classes.find(c => c.code === classCode);
-    if (!cls || cls.students.length === 0) return;
-
-    const blockedStudents = JSON.parse(localStorage.getItem('blockedStudents') || '[]');
-    const container = document.getElementById('blockedStudentsList');
-
-    container.innerHTML = cls.students.map(student => {
-        const isBlocked = blockedStudents.includes(student);
-        return `
-        <div class="class-card">
-            <div class="class-info">
-                <h3>${student}</h3>
-            </div>
-            <button class="btn-outline" onclick="toggleBlock('${student}')" style="padding:6px 16px;font-size:12px;${isBlocked ? 'border-color:#ff4444;color:#ff4444;' : ''}">
-                ${isBlocked ? 'Unblock' : 'Block'}
-            </button>
-        </div>`;
-    }).join('');
+    loadQuizSections(code);
+}function toggleSection(id) {
+    const sections = ['scheduledSection', 'liveSection', 'endedSection'];
+    sections.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) {
+            if (s === id) {
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+    });
 }
 
-function toggleBlock(studentName) {
-    let blockedStudents = JSON.parse(localStorage.getItem('blockedStudents') || '[]');
-    if (blockedStudents.includes(studentName)) {
-        blockedStudents = blockedStudents.filter(s => s !== studentName);
-        alert(`${studentName} unblocked!`);
-    } else {
-        blockedStudents.push(studentName);
-        alert(`${studentName} blocked from quiz!`);
-    }
-    localStorage.setItem('blockedStudents', JSON.stringify(blockedStudents));
+function clearAllBlocks() {
+    localStorage.setItem('blockedStudents', JSON.stringify([]));
     const code = document.getElementById('selectedQuizClassCode').value;
-    loadBlockedStudents(code);
+    loadManageStudents(code);
+    alert('All students unblocked!');
+}
+function editQuiz(id, code) {
+    const quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+    const quiz = quizzes.find(q => q.id === id);
+    if (!quiz) return;
+
+    document.getElementById('quiz-title').value = quiz.title;
+    document.getElementById('quiz-subject').value = quiz.subject;
+    document.getElementById('quiz-datetime').value = quiz.datetime;
+    document.getElementById('quiz-timelimit').value = quiz.timelimit;
+    document.getElementById('quiz-key').value = quiz.key;
+
+    questionCount = 0;
+    document.getElementById('questionsContainer').innerHTML = '';
+
+    quiz.questions.forEach(q => {
+        addQuestion();
+        const num = questionCount;
+        document.getElementById(`qtype-${num}`).value = q.type;
+        updateQuestionType(num);
+        document.getElementById(`qtext-${num}`).value = q.text;
+        if (document.getElementById(`qans-${num}`)) {
+            document.getElementById(`qans-${num}`).value = q.answer;
+        }
+        if (q.type === 'mcq' && q.options) {
+            if (document.getElementById(`qa-${num}`)) document.getElementById(`qa-${num}`).value = q.options.A;
+            if (document.getElementById(`qb-${num}`)) document.getElementById(`qb-${num}`).value = q.options.B;
+            if (document.getElementById(`qc-${num}`)) document.getElementById(`qc-${num}`).value = q.options.C;
+            if (document.getElementById(`qd-${num}`)) document.getElementById(`qd-${num}`).value = q.options.D;
+        }
+    });
+
+    // delete old quiz and save new one on submit
+    document.getElementById('editingQuizId').value = id;
+    document.getElementById('scheduleBtn').textContent = 'Update Quiz';
+
+    window.scrollTo(0, document.querySelector('.dash-card').offsetTop);
 }

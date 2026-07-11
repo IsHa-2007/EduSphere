@@ -56,34 +56,44 @@ function loadClassQuizzes(code) {
     const blockedStudents = JSON.parse(localStorage.getItem('blockedStudents') || '[]');
     const myName = localStorage.getItem('name') || '';
     const isBlocked = blockedStudents.includes(myName);
+    const now = new Date();
 
     if (classQuizzes.length === 0) {
         container.innerHTML = '<div class="empty-state"><p>No quizzes for this class yet.</p></div>';
         return;
     }
 
-    const now = new Date();
-
     container.innerHTML = classQuizzes.map(q => {
         const startTime = new Date(q.datetime);
-        const isActive = startTime <= now;
-        const isSubmitted = submittedQuizzes.includes(q.id);
+        const endTime = new Date(startTime.getTime() + q.timelimit * 60000);
+        const isActive = startTime <= now && endTime > now;
+        const isEnded = endTime <= now;
+        const isUpcoming = startTime > now;
+        const isSubmitted = submittedQuizzes.some(s => s.quizId === q.id && s.studentName === myName);
 
         let statusBadge = '';
         let actionBtn = '';
 
         if (isSubmitted) {
+            const myResult = submittedQuizzes.find(s => s.quizId === q.id && s.studentName === myName);
+            const pct = Math.round((myResult.score / myResult.total) * 100);
             statusBadge = '<span class="ann-badge general">Submitted</span>';
-            actionBtn = '';
+            actionBtn = `<p style="font-size:13px;color:#0095ff;margin-top:8px;">Your score: ${myResult.score}/${myResult.total} (${pct}%)</p>`;
+        } else if (isEnded) {
+            statusBadge = '<span class="ann-badge" style="background:rgba(150,150,150,0.1);color:#aaaaaa;">Ended</span>';
+            actionBtn = '<p style="font-size:12px;color:#444;margin-top:8px;">This quiz has ended.</p>';
         } else if (isBlocked) {
             statusBadge = '<span class="ann-badge urgent">Blocked</span>';
-            actionBtn = '';
-        } else if (!isActive) {
+            actionBtn = '<p style="font-size:12px;color:#ff4444;margin-top:8px;">You are blocked from this quiz.</p>';
+        } else if (isUpcoming) {
             statusBadge = '<span class="ann-badge quiz">Upcoming</span>';
-            actionBtn = `<p style="font-size:12px;color:#aaaaaa;">Starts: ${startTime.toLocaleString()}</p>`;
-        } else {
-            statusBadge = '<span class="ann-badge exam">Active</span>';
-            actionBtn = `<button class="btn-primary" onclick="startQuizPrompt(${q.id})" style="margin-top:8px;padding:6px 20px;font-size:13px;">Attempt Quiz</button>`;
+            actionBtn = `<p style="font-size:12px;color:#aaaaaa;margin-top:8px;">Starts: ${startTime.toLocaleString()}</p>`;
+        } else if (isActive) {
+            const minsLeft = Math.round((endTime - now) / 60000);
+            statusBadge = '<span class="ann-badge exam">Live 🟢</span>';
+            actionBtn = `
+                <p style="font-size:12px;color:#ffcc00;margin-top:4px;">⏱️ ${minsLeft} minutes remaining</p>
+                <button class="btn-primary" onclick="startQuizPrompt(${q.id})" style="margin-top:8px;padding:6px 20px;font-size:13px;">Attempt Quiz</button>`;
         }
 
         return `
@@ -91,7 +101,10 @@ function loadClassQuizzes(code) {
             <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
                 <div class="note-info">
                     <h3>${q.title} ${statusBadge}</h3>
-                    <p>${q.subject} · ${q.questions.length} questions · ${q.timelimit} mins · ${startTime.toLocaleString()}</p>
+                    <p>${q.subject} · ${q.questions.length} questions · ${q.timelimit} mins</p>
+                    <p style="font-size:11px;color:#aaaaaa;margin-top:2px;">
+                        Start: ${startTime.toLocaleString()} · End: ${endTime.toLocaleString()}
+                    </p>
                 </div>
             </div>
             ${actionBtn}

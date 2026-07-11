@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduSphere-teacher Dashboard</title>
+    <title>EduSphere - Attendance</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,11 +14,10 @@
         <main class="main-content">
             <div class="page-header">
                 <h2>Attendance</h2>
-                <p>Mark attendance for your classes</p>
+                <p>Mark and view attendance for your classes</p>
             </div>
 
             <div class="dash-card" id="attendanceClassList"></div>
-
 
             <div id="attendanceSection" style="display:none;">
                 <input type="hidden" id="attendanceClassCode">
@@ -27,59 +26,67 @@
                         style="padding:6px 16px;font-size:13px;">← Back</button>
                     <h3 id="attendanceClassName" style="color:white;font-size:18px;"></h3>
                 </div>
-
                 <div class="dash-card" style="margin-bottom:24px;">
                     <h3>Select Date</h3>
                     <input type="date" id="attendance-date"
-                        onchange="loadStudentsForAttendance(document.getElementById('attendanceClassCode').value)"
-                        style="padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;">
+                        onchange="loadStudentsForAttendance(document.getElementById('attendanceClassCode').value)">
                 </div>
-                <div id="attendanceRecordsSection" style="display:none;">
-                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-                        <button class="btn-outline" onclick="backFromRecords()"
-                            style="padding:6px 16px;font-size:13px;">← Back</button>
-                        <h3 id="recordsClassName" style="color:white;font-size:18px;"></h3>
-                    </div>
-                    <div id="recordsList"></div>
-                </div>
-
                 <div class="dash-card">
                     <h3>Students</h3>
                     <div id="studentAttendanceList"></div>
                 </div>
-                <div style="margin-top:24px;display:flex;gap:12px;">
-                    <button class="btn-primary" onclick="doneAttendance()" style="padding:10px 32px;">Done </button>
+                <button class="btn-primary" onclick="doneAttendance()" style="margin-top:24px;padding:10px 32px;">Done
+                    ✓</button>
+            </div>
+
+            <div id="recordsSection" style="display:none;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <button class="btn-outline" onclick="backFromRecords()" style="padding:6px 16px;font-size:13px;">←
+                        Back</button>
+                    <h3 id="recordsClassName" style="color:white;font-size:18px;"></h3>
+                </div>
+                <div id="recordsList"></div>
+            </div>
+            <!-- DATE SPECIFIC RECORD -->
+            <div id="dateRecordSection" style="display:none;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <button class="btn-outline" onclick="backFromDateRecord()"
+                        style="padding:6px 16px;font-size:13px;">← Back</button>
+                    <h3 id="dateRecordTitle" style="color:white;font-size:18px;"></h3>
+                </div>
+                <div class="dash-card">
+                    <div id="dateRecordContent"></div>
                 </div>
             </div>
         </main>
+
         <div class="ai-float" onclick="toggleChat()">
-            <button class="ai-float-btn">
-                E<span class="ai-highlight">S</span>
-            </button>
+            <button class="ai-float-btn">E<span class="ai-highlight">S</span></button>
             <span class="ai-float-label">AI Assistant</span>
         </div>
-        <div class="ai-chat-popup" id="aiChat">
-            <div class="chat-header">
-                <div class="chat-title">
-                    <span>Edu<span class="highlight">Sphere</span> AI</span>
-                </div>
-                <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+
+    <div class="ai-chat-popup" id="aiChat">
+        <div class="chat-header">
+            <div class="chat-title">
+                <span>Edu<span class="highlight">Sphere</span> AI</span>
             </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="msg ai-msg">
-                    <p>Hi! I'm EduSphere AI. I'll be fully functional soon. How can I help you today?</p>
-                </div>
-            </div>
-            <div class="chat-input-row">
-                <input type="text" id="chatInput" placeholder="Ask anything..." />
-                <button class="chat-send" onclick="sendMessage()">➤</button>
+            <button class="chat-close" onclick="toggleChat()">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg ai-msg">
+                <p>Hi! I'm EduSphere AI. I'll be fully functional soon. How can I help you today?</p>
             </div>
         </div>
+        <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Ask anything..." />
+            <button class="chat-send" onclick="sendMessage()">➤</button>
+        </div>
     </div>
+
     <script src="sidebar.js"></script>
     <script src="dashboard.js"></script>
     <script src="teacher-attendance.js"></script>
-    <script src="teacher-attendance-records.js"></script>
 </body>
 
 </html>
