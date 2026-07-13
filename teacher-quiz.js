@@ -1,6 +1,6 @@
 let questionCount = 0;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadQuizClasses();
 });
 
@@ -96,12 +96,12 @@ function renderQuizSection(containerId, quizzes, type) {
                     ${type === 'ended' ? `<p style="color:#0095ff;font-size:12px;margin-top:4px;">${results.length}/${totalStudents} submitted</p>` : ''}
                 </div>
                 <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-                    <button class="btn-outline" onclick="editQuiz(${q.id})" 
-                    style="padding:6px 14px;font-size:12px;">✏️ Edit</button>
-                    ${type === 'ended' ? 
-                        `<button class="btn-outline" onclick="viewQuizResult(${q.id})" 
-                        style="padding:6px 14px;font-size:12px;">📊 Result</button>` : ''}
-                    <button class="post-action-btn" onclick="deleteQuiz(${q.id}, '${q.classCode}')">🗑️</button>
+                  ${type !== 'ended' ? `<button class="btn-outline" onclick="editQuiz(${q.id})" 
+                   style="padding:6px 14px;font-size:12px;">✏️ Edit</button>` : ''}
+                  ${type === 'ended' ?
+                      `<button class="btn-outline" onclick="viewQuizResult(${q.id})" 
+                      style="padding:6px 14px;font-size:12px;">📊 Result</button>` : ''}
+                  <button class="post-action-btn" onclick="deleteQuiz(${q.id}, '${q.classCode}')">🗑️</button>
                 </div>
             </div>
         </div>`;
@@ -121,7 +121,7 @@ function viewQuizResult(quizId) {
     const totalStudents = cls ? cls.students.length : 0;
 
     document.getElementById('resultQuizTitle').textContent = quiz.title;
-    document.getElementById('resultQuizMeta').textContent = 
+    document.getElementById('resultQuizMeta').textContent =
         `${quiz.subject} · ${results.length}/${totalStudents} students submitted`;
 
     const container = document.getElementById('quizResultTable');
@@ -144,23 +144,23 @@ function viewQuizResult(quizId) {
                 </tr>
             </thead>
             <tbody>
-                ${[...results].sort((a,b) => b.score - a.score).map((r, i) => {
-                    const pct = Math.round((r.score / r.total) * 100);
-                    let grade = '', color = '';
-                    if (pct >= 80) { grade = '🟢 Excellent'; color = '#00cc66'; }
-                    else if (pct >= 60) { grade = '🔵 Good'; color = '#0095ff'; }
-                    else if (pct >= 40) { grade = '🟡 Average'; color = '#ffcc00'; }
-                    else { grade = '🔴 Poor'; color = '#ff4444'; }
-                    return `
+                ${[...results].sort((a, b) => b.score - a.score).map((r, i) => {
+        const pct = Math.round((r.score / r.total) * 100);
+        let grade = '', color = '';
+        if (pct >= 80) { grade = '🟢 Excellent'; color = '#00cc66'; }
+        else if (pct >= 60) { grade = '🔵 Good'; color = '#0095ff'; }
+        else if (pct >= 40) { grade = '🟡 Average'; color = '#ffcc00'; }
+        else { grade = '🔴 Poor'; color = '#ff4444'; }
+        return `
                     <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                        <td style="padding:10px;font-size:13px;color:#aaaaaa;">${i+1}</td>
+                        <td style="padding:10px;font-size:13px;color:#aaaaaa;">${i + 1}</td>
                         <td style="padding:10px;font-size:13px;color:white;">${r.studentName}</td>
                         <td style="padding:10px;text-align:center;font-size:13px;color:white;">${r.score}/${r.total}</td>
                         <td style="padding:10px;text-align:center;font-size:14px;font-weight:700;color:${color};">${pct}%</td>
                         <td style="padding:10px;text-align:center;font-size:12px;color:${color};">${grade}</td>
                         <td style="padding:10px;text-align:right;font-size:11px;color:#aaaaaa;">${r.time}</td>
                     </tr>`;
-                }).join('')}
+    }).join('')}
             </tbody>
         </table>`;
 }

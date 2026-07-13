@@ -22,32 +22,32 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <p class="stat-label">Attendance</p>
-                    <h3 class="stat-value">---</h3>
-                    <p class="stat-sub">This semester</p>
+                    <h3 class="stat-value" id="stat-attendance">--%</h3>
+                    <p class="stat-sub">Overall all classes</p>
                 </div>
                 <div class="stat-card">
-                    <p class="stat-label">Subjects</p>
-                    <h3 class="stat-value">---</h3>
-                    <p class="stat-sub">Currently enrolled</p>
+                    <p class="stat-label">Classes</p>
+                    <h3 class="stat-value" id="stat-classes">--</h3>
+                    <p class="stat-sub">Enrolled</p>
                 </div>
                 <div class="stat-card">
                     <p class="stat-label">Quizzes</p>
-                    <h3 class="stat-value">---</h3>
+                    <h3 class="stat-value" id="stat-quizzes">--</h3>
                     <p class="stat-sub">Upcoming</p>
                 </div>
                 <div class="stat-card">
-                    <p class="stat-label">CGPA</p>
-                    <h3 class="stat-value">---</h3>
-                    <p class="stat-sub">This semester</p>
+                    <p class="stat-label">Latest Score</p>
+                    <h3 class="stat-value" id="stat-score">--</h3>
+                    <p class="stat-sub">Last quiz</p>
                 </div>
             </div>
 
-            <div class="dash-grid">
+            <div class="dash-grid" style="margin-top:24px;">
                 <div class="dash-card">
-                    <h3>Subject Attendance</h3>
-                    <div id="attendance-section">
+                    <h3>Announcements</h3>
+                    <div id="announcements-section">
                         <div class="empty-state">
-                            <p>No attendance data yet.</p>
+                            <p>No announcements yet.</p>
                         </div>
                     </div>
                 </div>
@@ -59,16 +59,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="dash-card" style="margin-top: 24px;">
-                    <h3>Announcements</h3>
-                    <div id="announcements-section">
-                        <div class="empty-state">
-                            <p>No recent announcements.</p>
-                        </div>
-                    </div>
-                </div>
-
+            </div>
         </main>
 
         <div class="ai-float" onclick="toggleChat()">

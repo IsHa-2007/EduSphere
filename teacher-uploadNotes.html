@@ -1,74 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduSphere-teacher Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
-            <main class="main-content">
-              <div class="page-header">
-    <h2>Upload Notes</h2>
-    <p>Share study materials with students</p>
-</div>
-<div class="page-header">
-    <h2>Upload Notes</h2>
-    <p>Share study materials with your students</p>
-</div>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Upload Notes</h2>
+                <p>Share study materials with students</p>
+            </div>
+            <div class="page-header">
+                <h2>Upload Notes</h2>
+                <p>Share study materials with your students</p>
+            </div>
 
-<div class="dash-card" style="margin-bottom: 24px;">
-    <h3>Add New Note</h3>
-    <div class="input-group">
-        <label>Title</label>
-        <input type="text" id="note-title" placeholder="e.g. Unit 2 - Data Structures">
-    </div>
-    <div class="input-group">
-        <label>Subject</label>
-        <input type="text" id="note-subject" placeholder="e.g. DSA">
-    </div>
-    <div class="input-group">
-        <label>Content / Description</label>
-        <textarea id="note-content" placeholder="Write note content here..." style="width:100%; padding:10px 14px; background:rgba(255,255,255,0.05); border:1px solid rgba(0,149,255,0.2); border-radius:8px; color:white; font-size:14px; outline:none; resize:none; height:100px; font-family:'Segoe UI',sans-serif;"></textarea>
-    </div>
-    <button class="btn-primary" onclick="uploadNote()">Upload Note</button>
-</div>
+            <div class="dash-card" style="margin-bottom: 24px;">
+                <h3>Add New Note</h3>
+                <div class="input-group">
+                    <label>Title</label>
+                    <input type="text" id="note-title" placeholder="e.g. Unit 2 - Data Structures">
+                </div>
+                <div class="input-group">
+                    <label>Subject</label>
+                    <input type="text" id="note-subject" placeholder="e.g. DSA">
+                </div>
+                <div class="input-group">
+                    <label>Content / Description</label>
+                    <textarea id="note-content" placeholder="Write note content here..."
+                        style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;resize:none;height:100px;font-family:'Segoe UI',sans-serif;"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Upload File (PDF, DOC, PPT, Image)</label>
+                    <input type="file" id="note-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg"
+                        style="display:none"
+                        onchange="document.getElementById('fileLabel').textContent = '📎 ' + this.files[0].name">
+                    <button class="btn-outline" id="fileLabel" onclick="document.getElementById('note-file').click()"
+                        style="width:100%;padding:10px;text-align:left;">📎 Upload File</button>
+                </div>
+                <button class="btn-primary" onclick="uploadNote()">Upload Note</button>
+            </div>
 
-<div class="dash-card">
-    <h3>Uploaded Notes</h3>
-    <div id="notesList">
-        <div class="empty-state"><p>No notes uploaded yet.</p></div>
-    </div>
-</div>
-            </main>
-            <div class="ai-float" onclick="toggleChat()">
+            <div class="dash-card">
+                <h3>Uploaded Notes</h3>
+                <div id="notesList">
+                    <div class="empty-state">
+                        <p>No notes uploaded yet.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div class="ai-float" onclick="toggleChat()">
             <button class="ai-float-btn">
                 E<span class="ai-highlight">S</span>
             </button>
             <span class="ai-float-label">AI Assistant</span>
         </div>
-    <div class="ai-chat-popup" id="aiChat">
-        <div class="chat-header">
-            <div class="chat-title">
-                <span>Edu<span class="highlight">Sphere</span> AI</span>
+        <div class="ai-chat-popup" id="aiChat">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <span>Edu<span class="highlight">Sphere</span> AI</span>
+                </div>
+                <button class="chat-close" onclick="toggleChat()">✕</button>
             </div>
-            <button class="chat-close" onclick="toggleChat()">✕</button>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="msg ai-msg">
-                <p>Hi! I'm EduSphere AI. I'll be fully functional soon. How can I help you today?</p>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg ai-msg">
+                    <p>Hi! I'm EduSphere AI. I'll be fully functional soon. How can I help you today?</p>
+                </div>
             </div>
-        </div>
-        <div class="chat-input-row">
-            <input type="text" id="chatInput" placeholder="Ask anything..." />
-            <button class="chat-send" onclick="sendMessage()">➤</button>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="Ask anything..." />
+                <button class="chat-send" onclick="sendMessage()">➤</button>
+            </div>
         </div>
     </div>
-            </div>
     <script src="sidebar.js"></script>
-<script src="dashboard.js"></script>
-<script src="teacher-notes.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="teacher-notes.js"></script>
 </body>
+
 </html>

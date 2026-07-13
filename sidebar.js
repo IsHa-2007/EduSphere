@@ -5,7 +5,7 @@ const studentLinks = `
     <a href="student-dashboard.html" class="nav-item">Home</a>
     <a href="student-activity-dashboard.html" class="nav-item">Activity</a>
     <a href="student-attendence.html" class="nav-item">Attendance</a>
-    <a href="student-exam.html" class="nav-item">Exams</a>
+    <a href="student-announcements.html" class="nav-item">Announcements</a>
     <a href="student-doubt.html" class="nav-item">Doubts</a>
     <a href="student-notes.html" class="nav-item">Notes</a>
     <a href="student-quiz.html" class="nav-item">Quizzes</a>

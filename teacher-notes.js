@@ -6,30 +6,50 @@ function uploadNote() {
     const title = document.getElementById('note-title').value.trim();
     const subject = document.getElementById('note-subject').value.trim();
     const content = document.getElementById('note-content').value.trim();
+    const fileInput = document.getElementById('note-file');
+    const file = fileInput.files[0];
 
-    if (title === '' || subject === '' || content === '') {
-        alert('Please fill all fields!');
+    if (title === '' || subject === '') {
+        alert('Please fill title and subject!');
         return;
     }
 
-    const notes = JSON.parse(localStorage.getItem('teacherNotes') || '[]');
-    const newNote = {
-        id: Date.now(),
-        title: title,
-        subject: subject,
-        content: content,
-        teacher: localStorage.getItem('name') || 'Teacher',
-        time: new Date().toLocaleString()
+    if (!content && !file) {
+        alert('Please add content or upload a file!');
+        return;
+    }
+
+    const processNote = (fileData, fileName, fileType) => {
+        const notes = JSON.parse(localStorage.getItem('teacherNotes') || '[]');
+        const newNote = {
+            id: Date.now(),
+            title, subject, content,
+            fileData: fileData || null,
+            fileName: fileName || null,
+            fileType: fileType || null,
+            teacher: localStorage.getItem('name') || 'Teacher',
+            time: new Date().toLocaleString()
+        };
+        notes.unshift(newNote);
+        localStorage.setItem('teacherNotes', JSON.stringify(notes));
+        document.getElementById('note-title').value = '';
+        document.getElementById('note-subject').value = '';
+        document.getElementById('note-content').value = '';
+        fileInput.value = '';
+        document.getElementById('fileLabel').textContent = '📎 Upload File';
+        loadNotes();
+        alert('Note uploaded!');
     };
 
-    notes.unshift(newNote);
-    localStorage.setItem('teacherNotes', JSON.stringify(notes));
-
-    document.getElementById('note-title').value = '';
-    document.getElementById('note-subject').value = '';
-    document.getElementById('note-content').value = '';
-
-    loadNotes();
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            processNote(e.target.result, file.name, file.type);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        processNote(null, null, null);
+    }
 }
 
 function loadNotes() {
@@ -46,7 +66,8 @@ function loadNotes() {
             <div class="note-info">
                 <h3>${note.title}</h3>
                 <p>${note.subject} · ${note.teacher} · ${note.time}</p>
-                <p class="note-content">${note.content}</p>
+                ${note.content ? `<p class="note-content">${note.content}</p>` : ''}
+                ${note.fileName ? `<p style="font-size:12px;color:#0095ff;margin-top:6px;">📎 ${note.fileName}</p>` : ''}
             </div>
             <button class="post-action-btn" onclick="deleteNote(${note.id})">🗑️</button>
         </div>

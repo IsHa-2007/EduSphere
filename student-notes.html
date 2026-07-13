@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>notes-dashboard</title>
-     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="main-content">
             <div class="page-header">
-    <h2>Notes</h2>
-    <p>Study materials shared by your teachers</p>
-</div>
+                <h2>Notes</h2>
+                <p>Study materials shared by your teachers</p>
+            </div>
 
-<div class="dash-card">
-    <h3>Available Notes</h3>
-    <div id="studentNotesList">
-        <div class="empty-state"><p>No notes available yet.</p></div>
-    </div>
-</div>
-             </main>
+            <div class="dash-card" style="margin-bottom:16px;">
+                <input type="text" id="noteSearch" placeholder="🔍 Search notes by title or subject..."
+                    oninput="loadStudentNotes()"
+                    style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,149,255,0.2);border-radius:8px;color:white;font-size:14px;outline:none;">
+            </div>
+
+            <div class="dash-card">
+                <h3>Available Notes</h3>
+                <div id="studentNotesList"></div>
+            </div>
+        </main>
 
 
-             <div class="ai-float" onclick="toggleChat()">
+        <div class="ai-float" onclick="toggleChat()">
             <button class="ai-float-btn">
                 E<span class="ai-highlight">S</span>
             </button>
@@ -50,8 +56,9 @@
             <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
-<script src="sidebar.js"></script>
-<script src="dashboard.js"></script>
-<script src="student-notes.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="student-notes.js"></script>
 </body>
+
 </html>
