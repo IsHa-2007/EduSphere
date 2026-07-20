@@ -14,8 +14,10 @@
             
             <!-- SEARCH BAR -->
             <div class="feed-search">
-                <input type="text" placeholder="🔍 Search people, posts, colleges..." />
-            </div>
+    <input type="text" id="feedSearch" placeholder="🔍 Search people in your classes..." 
+    oninput="searchPeople()"/>
+</div>
+<div id="searchResults" class="dash-card" style="display:none;margin-bottom:16px;"></div>
 
             <!-- CREATE POST -->
 <div class="create-post">

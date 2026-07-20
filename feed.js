@@ -96,4 +96,40 @@ function likePost(id) {
         localStorage.setItem('posts', JSON.stringify(posts));
         loadPosts();
     }
+}function searchPeople() {
+    const query = document.getElementById('feedSearch').value.trim().toLowerCase();
+    if (query === '') {
+        document.getElementById('searchResults').style.display = 'none';
+        return;
+    }
+
+    // search from class members
+    const myClasses = JSON.parse(localStorage.getItem('myClasses') || '[]');
+    const teacherClasses = JSON.parse(localStorage.getItem('teacherClasses') || '[]');
+    
+    let allPeople = new Set();
+    myClasses.forEach(cls => {
+        const found = teacherClasses.find(c => c.code === cls.code);
+        if (found) {
+            found.students.forEach(s => allPeople.add(s));
+            allPeople.add(found.teacher);
+        }
+    });
+
+    const results = [...allPeople].filter(p => p.toLowerCase().includes(query));
+    const container = document.getElementById('searchResults');
+
+    if (results.length === 0) {
+        container.innerHTML = '<p style="color:#444;font-size:13px;padding:12px;">No people found.</p>';
+    } else {
+        container.innerHTML = results.map(person => `
+            <div class="class-card" style="margin-bottom:8px;">
+                <div class="class-info" style="display:flex;align-items:center;gap:10px;">
+                    <div class="post-user-avatar">👤</div>
+                    <h3>${person}</h3>
+                </div>
+            </div>
+        `).join('');
+    }
+    container.style.display = 'block';
 }
